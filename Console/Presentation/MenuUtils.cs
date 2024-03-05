@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Reveche.SimpleLearnerInfoSystem.Console.Data;
+﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
 
 namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
 
@@ -28,11 +27,13 @@ public static class MenuUtils
     public static void NoPrograms()
     {
         Boxes.DrawCenteredBox("No programs found. Please add a program first.");
+        System.Console.ReadKey();
     }
 
     public static void NoStudents()
     {
         Boxes.DrawCenteredBox("No students found. Please add a student first.");
+        System.Console.ReadKey();
     }
     
     
@@ -109,8 +110,9 @@ public static class MenuUtils
         var actionDict = new Dictionary<char, Action>();
         for (var i = 0; i < actionList.Count; i++)
         {
-            var index = i + 48;
-            if (i > 8) index += 7;
+            var index = i + 49;
+            if (i == 9) i = 48;
+            if (i > 9) index += 7;
             
             actionDict.Add((char) index, actionList[i]);
         }
