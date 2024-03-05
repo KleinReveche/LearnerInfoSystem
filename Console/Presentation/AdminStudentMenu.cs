@@ -1,4 +1,5 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
+﻿using System.Collections.Immutable;
+using Reveche.SimpleLearnerInfoSystem.Console.Data;
 using Reveche.SimpleLearnerInfoSystem.Data;
 using Reveche.SimpleLearnerInfoSystem.Models;
 
@@ -382,7 +383,7 @@ public partial class AdminMenu
             return;
         }
         
-        if (Users.Any(u => u.Role == UserRole.Learner))
+        if (Users.Any(u => u.Role != UserRole.Learner))
         {
             MenuUtils.NoStudents();
             return;
@@ -401,9 +402,10 @@ public partial class AdminMenu
         var headers = new[] { "Student ID", "Name", "Age", "Program", "Year", "Email", "Phone Number" };
         var data = foundStudents.Select(x => new[]
         {
-            x.UserIdStr, x.FullName, Utils.GetAge(x.BirthDate), GetLastProgram(repo.GetProgramTracker(x.Id)!.Programs), 
+            x.UserIdStr, x.FullName, Utils.GetAge(x.BirthDate), GetLastProgram(repo.GetProgramTracker(x.Id)?.Programs ?? []), 
             x.Email, x.PhoneNumber.ToString()
         }).ToArray();
+        // TODO: FIX!!
         Boxes.CreateTable(headers, data);
 
         System.Console.WriteLine("\n");
@@ -413,7 +415,7 @@ public partial class AdminMenu
 
         string GetLastProgram(IReadOnlyCollection<ProgramProgress> programProgresses)
         {
-            if (programProgresses.Count == 0) return "MenuUtils.No Program Yet.";
+            if (programProgresses.Count == 0) return "No Program Yet.";
             var inProgressProgram = programProgresses.FirstOrDefault(x => x.Status == Status.InProgress);
             if (inProgressProgram != default) return Programs.Find(x => x.ProgramId == inProgressProgram.ProgramId)!.Code;
             var completedPrograms = programProgresses.Where(x => x.Status == Status.Completed).OrderBy(d => d);
