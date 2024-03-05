@@ -141,7 +141,7 @@ public static class Boxes
     /// <param name="zeroIndexed">Whether the choices are zero-indexed. Default is false.</param>
     /// <param name="hasIndicator">Whether to add an indicator to the box. Default is false.</param>
     public static void DrawHeaderAndQuestionBox(string header, string question, string[] choices, int height = 7,
-        int padding = 12, bool zeroIndexed = true, bool hasIndicator = false)
+        int padding = 12, bool zeroIndexed = false, bool hasIndicator = false)
     {
         var width = Math.Max(header.Length, question.Length) + padding;
         var x = (System.Console.WindowWidth - width) / 2;
