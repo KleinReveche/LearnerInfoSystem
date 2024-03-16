@@ -16,8 +16,9 @@ public static class Default
         new Setting { Id = 5, Key = "AdminEmailDomain", Value = "institution.com.edu", Scope = UserRole.Administrator, IsString = true },
         new Setting { Id = 6, Key = "AdminIsBarangayEnabled", Value = "True", Scope = UserRole.Administrator, IsBool = true },
         new Setting { Id = 7, Key = "DefaultUserPassword", Value = "defaultpassword", Scope = UserRole.Administrator, IsString = true },
+        new Setting { Id = 8, Key = "AdminInstructorIdFormatting", Value = "FILNfaculty", Scope = UserRole.Administrator, IsString = true },
     ];
 
-    public static (string hash, byte[] salt) DefaultUserCredential(string defaultPassword) =>
+    public static (string hash, byte[] salt) DefaultUserCredential(string defaultPassword = "defaultpassword") =>
         (Credentials.HashPassword(defaultPassword, out var defaultSalt), defaultSalt);
 }

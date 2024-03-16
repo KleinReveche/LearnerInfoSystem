@@ -14,7 +14,9 @@ public static class Application
 
     public static void Main(string[] args)
     {
+        System.Console.OutputEncoding = System.Text.Encoding.UTF8;
         var parserResult = Parser.Default.ParseArguments<ApplicationOptions>(args);
+        var firstTime = !File.Exists(JsonFileName) && !File.Exists("SimpleLearnerInfoSystem.db");
         
         try
         {
@@ -54,13 +56,20 @@ public static class Application
         var repo = RepoType switch
         {
             RepoType.Json => new JsonRepo() as IRepo,
-            // TODO: Implement SqlRepo
             // TODO: ADD MIGRATION FROM JSON TO SQL
-            //RepoType.Sqlite => new SqlRepo(new SqliteDbContext()),
-            //RepoType.Mysql => new SqlRepo(new MySqlDbContext()),
+            RepoType.Sqlite => new SqlRepo(new SqliteDbContext()),
+            RepoType.Mysql => new SqlRepo(new MySqlDbContext()),
             _ => throw new ArgumentOutOfRangeException(nameof(args),
                 "Invalid argument. Please use 'mysql', 'sqlite', or 'json'")
         };
+        
+#if DEBUG
+        if (firstTime)
+        {
+            var randomData = new RandomData(repo);
+            randomData.GenerateData();
+        }
+#endif
         
         var login = new Login(repo);
         login.Run(out var loggedInUser);
@@ -98,7 +107,7 @@ public static class Application
             var username = System.Console.ReadLine();
             System.Console.Clear();
             Boxes.DrawHeaderAndQuestionBox("Setup SQL Server", "Enter SQL Server Password: ");
-            var password = Data.Utils.GetHiddenConsoleInput();
+            var password = Utils.GetHiddenConsoleInput();
             System.Console.Clear();
             Boxes.DrawHeaderAndQuestionBox("Setup SQL Server", "Enter Database Name: ");
             var database = System.Console.ReadLine();
@@ -127,6 +136,7 @@ public static class Application
 
 
 // ReSharper disable once ClassNeverInstantiated.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 public class ApplicationOptions
 {
     [Option('r', "repo", Default = "json", Required = false,

@@ -22,14 +22,6 @@ public class JsonRepo : IRepo
         Initialize();
     }
 
-    public void Initialize()
-    {
-        if (File.Exists(_jsonPath)) return;
-        var data = new JsonData { Settings = Default.DefaultSettings };
-        var json = JsonSerializer.Serialize(data, Context.JsonData);
-        File.WriteAllText(_jsonPath, json);
-    }
-
     public void AddUser(User user)
     {
         var data = GetInfo();
@@ -47,6 +39,7 @@ public class JsonRepo : IRepo
             data.ProgramTrackers.RemoveAll(p => p.UserId == id);
             data.CourseCompletions.RemoveAll(c => c.UserId == id);
         }
+
         SaveData(data);
     }
 
@@ -58,10 +51,7 @@ public class JsonRepo : IRepo
         SaveData(data);
     }
 
-    public List<User> GetUsers()
-    {
-        return GetInfo().Users;
-    }
+    public List<User> GetUsers() => GetInfo().Users;
 
     public User? GetUser(int id)
     {
@@ -78,30 +68,24 @@ public class JsonRepo : IRepo
     public void RemoveProgram(int id)
     {
         var data = GetInfo();
-        var program = data.Programs.Find(p => p.ProgramId == id);
-        if (program is not null)
-        {
-            data.Programs.RemoveAll(p => p.ProgramId == id);
-        }
+        var program = data.Programs.Find(p => p.Id == id);
+        if (program is not null) data.Programs.RemoveAll(p => p.Id == id);
         SaveData(data);
     }
 
     public void UpdateProgram(int id, Program program)
     {
         var data = GetInfo();
-        var index = data.Programs.FindIndex(p => p.ProgramId == id);
+        var index = data.Programs.FindIndex(p => p.Id == id);
         data.Programs[index] = program;
         SaveData(data);
     }
 
-    public List<Program> GetPrograms()
-    {
-        return GetInfo().Programs;
-    }
+    public List<Program> GetPrograms() => GetInfo().Programs;
 
     public Program? GetProgram(int id)
     {
-        return GetInfo().Programs.Find(p => p.ProgramId == id);
+        return GetInfo().Programs.Find(p => p.Id == id);
     }
 
     public void AddCourse(Course course)
@@ -126,15 +110,9 @@ public class JsonRepo : IRepo
         SaveData(data);
     }
 
-    public IEnumerable<Course> GetCourses()
-    {
-        return GetInfo().Courses;
-    }
+    public List<Course> GetCourses() => GetInfo().Courses;
 
-    public Course? GetCourse(int id)
-    {
-        return GetInfo().Courses.Find(c => c.Id == id);
-    }
+    public Course? GetCourse(int id) => GetInfo().Courses.Find(c => c.Id == id);
 
     public void AddCourseCompletion(CourseCompletion courseCompletion)
     {
@@ -158,16 +136,10 @@ public class JsonRepo : IRepo
         SaveData(data);
     }
 
-    public List<CourseCompletion> GetCourseCompletions()
-    {
-        return GetInfo().CourseCompletions;
-    }
+    public IEnumerable<CourseCompletion> GetCourseCompletions() => GetInfo().CourseCompletions;
 
-    public CourseCompletion? GetCourseCompletion(int id)
-    {
-        return GetInfo().CourseCompletions.Find(cc => cc.Id == id);
-    }
-
+    public CourseCompletion? GetCourseCompletion(int id) => GetInfo().CourseCompletions.Find(cc => cc.Id == id);
+    
     public void AddProgramTracker(ProgramTracker programTracker)
     {
         var data = GetInfo();
@@ -190,10 +162,7 @@ public class JsonRepo : IRepo
         SaveData(data);
     }
 
-    public List<ProgramTracker> GetProgramTrackers()
-    {
-        return GetInfo().ProgramTrackers;
-    }
+    public IEnumerable<ProgramTracker> GetProgramTrackers() => GetInfo().ProgramTrackers;
 
     public ProgramTracker? GetProgramTracker(int id)
     {
@@ -215,10 +184,7 @@ public class JsonRepo : IRepo
         SaveData(data);
     }
 
-    public List<Setting> GetSettings()
-    {
-        return GetInfo().Settings;
-    }
+    public List<Setting> GetSettings() => GetInfo().Settings;
 
     public Setting? GetSetting(int id)
     {
@@ -259,7 +225,8 @@ public class JsonRepo : IRepo
                 AddressZipCode = "",
                 PhoneNumber = 0,
                 Status = UserStatus.Administrator,
-                RegistrationDate = default
+                RegistrationDate = default,
+                YearLevel = LearnerYear.NotApplicable
             };
             return true;
         }
@@ -268,6 +235,49 @@ public class JsonRepo : IRepo
             (user.Username == username || user.Email == email) &&
             credentials.VerifyPassword(password, user.PasswordHash, user.PasswordSalt));
         return loggedInUser != null;
+    }
+
+    public void AddCourses(IEnumerable<Course> courses)
+    {
+        var data = GetInfo();
+        data.Courses.AddRange(courses);
+        SaveData(data);
+    }
+    
+    public void AddPrograms(IEnumerable<Program> programs)
+    {
+        var data = GetInfo();
+        data.Programs.AddRange(programs);
+        SaveData(data);
+    }
+    
+    public void AddUsers(IEnumerable<User> users)
+    {
+        var data = GetInfo();
+        data.Users.AddRange(users);
+        SaveData(data);
+    }
+    
+    public void AddCourseCompletions(IEnumerable<CourseCompletion> courseCompletions)
+    {
+        var data = GetInfo();
+        data.CourseCompletions.AddRange(courseCompletions);
+        SaveData(data);
+    }
+    
+    public void AddProgramTrackers(IEnumerable<ProgramTracker> programTrackers)
+    {
+        var data = GetInfo();
+        data.ProgramTrackers.AddRange(programTrackers);
+        SaveData(data);
+    }
+
+    private void Initialize()
+    {
+        if (File.Exists(_jsonPath)) return;
+        var data = new JsonData { Settings = Default.DefaultSettings };
+        var json = JsonSerializer.Serialize(data, Context.JsonData);
+        File.WriteAllText(_jsonPath, json);
     }
 
     private JsonData GetInfo()

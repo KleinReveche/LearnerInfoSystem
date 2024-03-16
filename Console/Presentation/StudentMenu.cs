@@ -15,7 +15,7 @@ public class StudentMenu(IRepo repo, User loggedInUser)
 
     private void Settings()
     {
-        throw new NotImplementedException();
+        
     }
 
     private void ViewGrades()
@@ -47,9 +47,9 @@ public class StudentMenu(IRepo repo, User loggedInUser)
             "Birthdate: " + loggedInUser.BirthDate,
             $"Address: {loggedInUser.AddressStreet}, {(!string.IsNullOrEmpty(loggedInUser.AddressBarangay) ? loggedInUser.AddressBarangay + ", " : "")}{loggedInUser.AddressCity}, " +
             $"{loggedInUser.AddressProvince}, {loggedInUser.AddressCountryCode}",
-            $"Phone Number: {$"{CountryJsonRepo.GetCountryInfo(loggedInUser.AddressCountryCode)?.Phone[0]} " ?? ""}{loggedInUser.PhoneNumber}",
+            $"Phone Number: {CountryJsonRepo.GetCountryInfo(loggedInUser.AddressCountryCode)?.Phone[0]} {loggedInUser.PhoneNumber}",
             "Email: " + loggedInUser.Email,
-            "Username: " + loggedInUser.Username,
+            "Username: " + loggedInUser.Username
         ];
         Boxes.DrawCenteredBox(userDetails);
         System.Console.ReadKey();

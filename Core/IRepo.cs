@@ -1,14 +1,10 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using System.Collections;
+using Reveche.SimpleLearnerInfoSystem.Models;
 
 namespace Reveche.SimpleLearnerInfoSystem;
 
 public interface IRepo
 {
-    /// <summary>
-    ///     Initializes the repository.
-    /// </summary>
-    void Initialize();
-    
     /// <summary>
     ///     Adds a new user to the repository.
     /// </summary>
@@ -96,7 +92,7 @@ public interface IRepo
     ///     Gets all courses from the repository.
     /// </summary>
     /// <returns>A list of all courses.</returns>
-    IEnumerable<Course> GetCourses();
+    List<Course> GetCourses();
 
     /// <summary>
     ///     Gets a course from the repository.
@@ -128,7 +124,7 @@ public interface IRepo
     ///     Gets all course completions from the repository.
     /// </summary>
     /// <returns>A list of all course completions.</returns>
-    List<CourseCompletion> GetCourseCompletions();
+    IEnumerable<CourseCompletion> GetCourseCompletions();
 
     /// <summary>
     ///     Gets a course completion from the repository.
@@ -160,7 +156,7 @@ public interface IRepo
     ///     Gets all ProgramTrackers from the repository.
     /// </summary>
     /// <returns>A list of all ProgramTrackers.</returns>
-    List<ProgramTracker> GetProgramTrackers();
+    IEnumerable<ProgramTracker> GetProgramTrackers();
 
     /// <summary>
     ///     Gets a ProgramTracker from the repository.
@@ -200,10 +196,16 @@ public interface IRepo
     /// </summary>
     /// <param name="username">The username of the user.</param>
     /// <param name="email">The email of the user.</param>
-    /// <param password="password">The password of the user.</param>
-    /// <param loggedInUser="loggedInUser">The user that was logged in.</param>
+    /// <param name="password">The password of the user.</param>
+    /// <param name="loggedInUser">The user that was logged in.</param>
     /// <returns>True iƒ the user is logged in, otherwise false.</returns>
     bool Login(string username, string email, string password, out User? loggedInUser);
+    
+    void AddCourses(IEnumerable<Course> courses);
+    void AddPrograms(IEnumerable<Program> programs);
+    void AddUsers(IEnumerable<User> users);
+    void AddCourseCompletions(IEnumerable<CourseCompletion> courseCompletions);
+    void AddProgramTrackers(IEnumerable<ProgramTracker> programTrackers);
 }
 
 public enum RepoType

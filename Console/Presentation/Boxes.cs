@@ -72,14 +72,17 @@ public static class Boxes
 
         System.Console.SetCursorPosition(x + 2 + indicatorPadding, y + 3);
     }
-    
+
     /// <summary>
-    /// Draws a centered box that displays the strings from the `info` array.
+    ///     Draws a centered box that displays the strings from the `info` array.
     /// </summary>
-    /// <param name="info">An array of strings to be displayed in the box. Each string will be printed on a new line inside the box.</param>
+    /// <param name="info">
+    ///     An array of strings to be displayed in the box. Each string will be printed on a new line inside the
+    ///     box.
+    /// </param>
     /// <remarks>
-    /// This method calculates the maximum length of the strings in the array to determine the width of the box.
-    /// It then calculates the `x` and `y` coordinates for the box to center it in the console window.
+    ///     This method calculates the maximum length of the strings in the array to determine the width of the box.
+    ///     It then calculates the `x` and `y` coordinates for the box to center it in the console window.
     /// </remarks>
     public static void DrawCenteredBox(string[] info)
     {
@@ -157,7 +160,7 @@ public static class Boxes
             if (i == 9)
             {
                 System.Console.SetCursorPosition(x + padding / 2, y + 6 + i);
-                System.Console.WriteLine($"[0] {choices[i]}");
+                System.Console.WriteLine($"[{(zeroIndexed ? 9 : 1)}] {choices[i]}");
                 continue;
             }
 
@@ -316,20 +319,23 @@ public static class Boxes
         var totalWidth = columnWidths.Sum() + columnWidths.Length * 3 + 1;
         var x = (System.Console.WindowWidth - totalWidth) / 2;
         var y = (System.Console.WindowHeight - data.Length - 2) / 2;
-        DrawTable(x, y, headers, data, columnWidths);
+        DrawTable(headers, data, columnWidths);
     }
 
     /// <summary>
-    /// Creates a table with the specified headers and data.
+    ///     Creates a table with the specified headers and data.
     /// </summary>
     /// <param name="headers">An array of strings representing the headers to be displayed at the top of the table.</param>
-    /// <param name="data">A 2D array of strings representing the data to be displayed in the table. Each sub-array represents a row of data.</param>
+    /// <param name="data">
+    ///     A 2D array of strings representing the data to be displayed in the table. Each sub-array represents
+    ///     a row of data.
+    /// </param>
     /// <param name="maxRows">Maximum amount of rows to show in the table.</param>
     /// <remarks>
-    /// This method calculates the width of each column based on the longest string in each column (including headers).
-    /// It then draws the table centered in the console window.
+    ///     This method calculates the width of each column based on the longest string in each column (including headers).
+    ///     It then draws the table centered in the console window.
     /// </remarks>
-    public static void CreateLazyTable(string[] headers, string[][] data, int maxRows = 10)
+    public static void CreateLazyTable(string[] headers, string[][] data, int maxRows = 20)
     {
         var columnWidths = new int[headers.Length];
         for (var i = 0; i < headers.Length; i++)
@@ -345,36 +351,29 @@ public static class Boxes
         var y = (System.Console.WindowHeight - maxRows - 2) / 2;
         var topRow = 0;
 
+        System.Console.CursorVisible = false;
         while (true)
         {
             System.Console.Clear();
-            DrawTable(x, y, headers, data.Skip(topRow).Take(maxRows).ToArray(), columnWidths);
+            DrawTable(headers, data.Skip(topRow).Take(maxRows).ToArray(), columnWidths);
+            System.Console.WriteLine("\n\n(Use the arrow keys to navigate the table)");
 
             var key = System.Console.ReadKey(true).Key;
-            if (key == ConsoleKey.UpArrow && topRow > 0)
-            {
-                topRow--;
-            }
-            else if (key == ConsoleKey.DownArrow && topRow < data.Length - maxRows)
-            {
-                topRow++;
-            }
-            else if (key is ConsoleKey.Escape or ConsoleKey.Backspace or ConsoleKey.Enter or ConsoleKey.Spacebar)
-            {
-                break;
-            }
+            if (key == ConsoleKey.UpArrow && topRow > 0) topRow--;
+            else if (key == ConsoleKey.DownArrow && topRow < data.Length - maxRows) topRow++;
+            else if (key is ConsoleKey.Escape or ConsoleKey.Backspace or ConsoleKey.Enter or ConsoleKey.Spacebar) break;
         }
+
+        System.Console.CursorVisible = true;
     }
 
     /// <summary>
     ///     Draws a table at the specified coordinates with the specified headers and data.
     /// </summary>
-    /// <param name="x">The x-coordinate of the top-left corner of the table.</param>
-    /// <param name="y">The y-coordinate of the top-left corner of the table.</param>
     /// <param name="headers">The headers to be displayed at the top of the table.</param>
     /// <param name="data">The data to be displayed in the table.</param>
     /// <param name="columnWidths">The widths of the columns of the table.</param>
-    private static void DrawTable(int x, int y, IReadOnlyList<string> headers, IEnumerable<string[]> data,
+    private static void DrawTable(IReadOnlyList<string> headers, IEnumerable<string[]> data,
         IReadOnlyList<int> columnWidths)
     {
         var sb = new StringBuilder();
@@ -435,16 +434,129 @@ public static class Boxes
         }
 
         sb.Append('╝');
-        
-        // TODO: FIX THIS
-        if (sb.Length > System.Console.WindowWidth * System.Console.WindowHeight)
+        System.Console.Write(sb.ToString());
+    }
+
+    public static IEnumerable<string> MultiSelectionBox(List<string> options, int maxRows = 10)
+    {
+        var selectedOptions = new List<string>();
+        var currentIndex = 0;
+        var topRow = 0;
+
+        System.Console.CursorVisible = false;
+        while (true)
         {
             System.Console.Clear();
-            System.Console.WriteLine("Table is too big for the console window. Please resize the window and try again.");
-            System.Console.ReadKey();
-            return;
-        }
+            var displayOptions = options.Skip(topRow).Take(maxRows).ToList();
+            var longestOptionLength = displayOptions.Max(option => option.Length);
+            var boxWidth = longestOptionLength + 20;
+            var boxHeight = displayOptions.Count + 2;
+            var boxX = (System.Console.WindowWidth - boxWidth) / 2;
+            var boxY = (System.Console.WindowHeight - boxHeight) / 2;
 
-        System.Console.Write(sb.ToString());
+            DrawBox(boxX, boxY, boxWidth, boxHeight);
+
+            for (var i = 0; i < displayOptions.Count; i++)
+            {
+                var checkbox = selectedOptions.Contains(displayOptions[i]) ? "[✓]" : "[ ]";
+                var selector = i + topRow == currentIndex ? ">> " : "   ";
+                System.Console.SetCursorPosition(boxX + 2, boxY + i + 1);
+                System.Console.WriteLine($"{selector} {checkbox} {displayOptions[i]}");
+            }
+
+            if (options.Count > maxRows) System.Console.WriteLine("\n(Use the arrow keys to navigate the list)");
+            System.Console.WriteLine("\nPress [Space] to select an option. Press [Enter] to confirm selection.");
+
+            var keyInfo = System.Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (currentIndex > 0) currentIndex--;
+                    if (currentIndex < topRow) topRow--;
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (currentIndex < options.Count - 1) currentIndex++;
+                    if (currentIndex >= topRow + maxRows) topRow++;
+                    break;
+                case ConsoleKey.PageUp:
+                    currentIndex = Math.Max(0, currentIndex - maxRows);
+                    topRow = Math.Max(0, topRow - maxRows);
+                    break;
+                case ConsoleKey.PageDown:
+                    currentIndex = Math.Min(options.Count - 1, currentIndex + maxRows);
+                    topRow = Math.Min(options.Count - maxRows, topRow + maxRows);
+                    break;
+                case ConsoleKey.Spacebar:
+                    var selectedOption = options[currentIndex];
+                    if (!selectedOptions.Remove(selectedOption)) selectedOptions.Add(selectedOption);
+                    break;
+                case ConsoleKey.Enter:
+                    System.Console.CursorVisible = true;
+                    return selectedOptions;
+                default:
+                    continue;
+            }
+        }
+    }
+
+    public static string SingleSelectionBox(List<string> options, int maxRows = 10)
+    {
+        var selectedOption = "";
+        var currentIndex = 0;
+        var topRow = 0;
+
+        System.Console.CursorVisible = false;
+        while (true)
+        {
+            System.Console.Clear();
+            var displayOptions = options.Skip(topRow).Take(maxRows).ToList();
+            var longestOptionLength = displayOptions.Max(option => option.Length);
+            var boxWidth = longestOptionLength + 20;
+            var boxHeight = displayOptions.Count + 2;
+            var boxX = (System.Console.WindowWidth - boxWidth) / 2;
+            var boxY = (System.Console.WindowHeight - boxHeight) / 2;
+
+            DrawBox(boxX, boxY, boxWidth, boxHeight);
+
+            for (var i = 0; i < displayOptions.Count; i++)
+            {
+                var checkbox = selectedOption.Contains(displayOptions[i]) ? "[✓]" : "[ ]";
+                var selector = i + topRow == currentIndex ? ">> " : "   ";
+                System.Console.SetCursorPosition(boxX + 2, boxY + i + 1);
+                System.Console.WriteLine($"{selector} {checkbox} {displayOptions[i]}");
+            }
+
+            if (options.Count > maxRows) System.Console.WriteLine("\n(Use the arrow keys to navigate the list)");
+            System.Console.WriteLine("\nPress [Space] to select an option. Press [Enter] to confirm selection.");
+
+            var keyInfo = System.Console.ReadKey(true);
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (currentIndex > 0) currentIndex--;
+                    if (currentIndex < topRow) topRow--;
+                    break;
+                case ConsoleKey.DownArrow:
+                    if (currentIndex < options.Count - 1) currentIndex++;
+                    if (currentIndex >= topRow + maxRows) topRow++;
+                    break;
+                case ConsoleKey.PageUp:
+                    currentIndex = Math.Max(0, currentIndex - maxRows);
+                    topRow = Math.Max(0, topRow - maxRows);
+                    break;
+                case ConsoleKey.PageDown:
+                    currentIndex = Math.Min(options.Count - 1, currentIndex + maxRows);
+                    topRow = Math.Min(options.Count - maxRows, topRow + maxRows);
+                    break;
+                case ConsoleKey.Spacebar:
+                    selectedOption = options[currentIndex];
+                    break;
+                case ConsoleKey.Enter:
+                    System.Console.CursorVisible = true;
+                    return selectedOption;
+                default:
+                    continue;
+            }
+        }
     }
 }

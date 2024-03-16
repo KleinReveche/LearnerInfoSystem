@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reveche.SimpleLearnerInfoSystem.Models;
 
@@ -12,6 +13,18 @@ public enum UserRole
     Administrator
 }
 
+public enum LearnerYear
+{
+    NotApplicable,
+    FirstYear,
+    SecondYear,
+    ThirdYear,
+    FourthYear,
+    FifthYear,
+    SixthYear,
+    SeventhYear,
+}
+
 /// <summary>
 ///     Represents the status of a user in the learning system.
 /// </summary>
@@ -22,9 +35,9 @@ public enum UserStatus
     DroppedLearner,
     SuspendedLearner,
     ExpelledLearner,
-    Teaching,
-    Administrator,
-    Retired
+    Instructing,
+    Retired,
+    Administrator
 }
 
 /// <summary>
@@ -35,6 +48,7 @@ public class User
     /// <summary>
     ///     The unique identifier for the user.
     /// </summary>
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [StringLength(255)] public required int Id { get; set; }
    
     /// <summary>
@@ -83,7 +97,7 @@ public class User
     [StringLength(255)] public required string FullName { get; set; }
 
     /// <summary>
-    ///     The birth date of the user.
+    ///     The birthdate of the user.
     /// </summary>
     [StringLength(10)] public required string BirthDate { get; set; }
 
@@ -136,4 +150,9 @@ public class User
     ///     The status of the user in the learning system.
     /// </summary>
     public required UserStatus Status { get; set; }
+    
+    /// <summary>
+    ///     The year level of the user in the learning system.
+    /// </summary>
+    public required LearnerYear YearLevel { get; set; }
 }

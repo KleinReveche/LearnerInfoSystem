@@ -16,9 +16,12 @@ public class ProgramMenu(IRepo repo)
 
     private void AddProgram()
     {
+        var courses = repo.GetCourses().ToList();
         var programCode = Utils.GetUserStringInput("Program Code: ");
         var programTitle = Utils.GetUserStringInput("Program Title: ", 50);
         var programDescription = Utils.GetUserStringInput("Program Description: ", 65);
+        var programCoursesSelectedCode = Boxes.MultiSelectionBox(courses.Select(x => x.Code).ToList());
+        var programCourses = courses.Where(x => programCoursesSelectedCode.Contains(x.Code)).ToList();
         
         if (GetPrograms.Any(x => x.Code == programCode || x.Title == programTitle))
         {
@@ -27,26 +30,34 @@ public class ProgramMenu(IRepo repo)
         }
 
         var programId = GetPrograms.Count + 1;
-        while (GetPrograms.Any(x => x.ProgramId == programId)) programId++;
+        while (GetPrograms.Any(x => x.Id == programId)) programId++;
 
         var newProgram = new Program
-            { Code = programCode, Title = programTitle, ProgramId = programId, Description = programDescription, Status = ProgramStatus.Active };
+        {
+            Code = programCode, 
+            Title = programTitle, 
+            Id = programId, 
+            Description = programDescription, 
+            Status = ProgramStatus.Active,
+            Courses = programCourses
+        };
+        
         repo.AddProgram(newProgram);
         Boxes.DrawCenteredBox($"Program {programCode} added to the record.");
         System.Console.ReadKey();
     }
 
-    private void DisplayPrograms()
+    public void DisplayPrograms()
     {
         if (GetPrograms.Count == 0)
         {
-            MenuUtils.NoPrograms();
+            MenuUtils.NotFoundPrompt("program", true);
             return;
         }
         
-        var headers = new[] { "Code", "Program " };
+        var headers = new[] { "Code", "Program" };
         var programs = GetPrograms.Select(x => new[] { x.Code, x.Title }).ToArray();
-        Boxes.CreateTable(headers, programs);
+        Boxes.CreateLazyTable(headers, programs);
         System.Console.ReadKey();
     }
 
@@ -54,17 +65,17 @@ public class ProgramMenu(IRepo repo)
     {
         if (GetPrograms.Count == 0)
         {
-            MenuUtils.NoPrograms();
+            MenuUtils.NotFoundPrompt("program", true);
             return;
         }
         
         var program = SearchProgram();
         if (program is null) return;
 
-        MenuUtils.GetStringUpdate("Program Code", program.Code, out var newProgramCode);
-        MenuUtils.GetStringUpdate("Program Name", program.Title, out var newProgramName);
-        MenuUtils.GetStringUpdate("Program Description", program.Description, out var newProgramDescription);
-        MenuUtils.GetEnumUpdate("Program Status", program.Status, out var newProgramStatus);
+        Utils.GetStringUpdate("Program Code", program.Code, out var newProgramCode);
+        Utils.GetStringUpdate("Program Name", program.Title, out var newProgramName);
+        Utils.GetStringUpdate("Program Description", program.Description, out var newProgramDescription);
+        Utils.GetEnumUpdate("Program Status", program.Status, out var newProgramStatus);
 
         if (newProgramCode == program.Code && newProgramName == program.Title)
         {
@@ -78,11 +89,11 @@ public class ProgramMenu(IRepo repo)
         var key = System.Console.ReadKey();
         if (key.Key != ConsoleKey.Y) return;
 
-        repo.UpdateProgram(program.ProgramId, new Program
+        repo.UpdateProgram(program.Id, new Program
         {
             Code = newProgramCode,
             Title = newProgramName,
-            ProgramId = program.ProgramId,
+            Id = program.Id,
             Description = newProgramDescription,
             Courses = program.Courses,
             Status = newProgramStatus
@@ -96,7 +107,7 @@ public class ProgramMenu(IRepo repo)
     {
         if (GetPrograms.Count == 0)
         {
-            MenuUtils.NoPrograms();
+            MenuUtils.NotFoundPrompt("program", true);
             return;
         }
         
@@ -104,7 +115,7 @@ public class ProgramMenu(IRepo repo)
 
         if (program is null)
         {
-            Boxes.DrawCenteredBox("Program not found.");
+            MenuUtils.NotFoundPrompt("program", false);
             return;
         }
 
@@ -127,7 +138,7 @@ public class ProgramMenu(IRepo repo)
                     return;
                 }
                 program.Status = ProgramStatus.Suspended;
-                repo.UpdateProgram(program.ProgramId, program);
+                repo.UpdateProgram(program.Id, program);
                 break;
             case '1':
                 Boxes.DrawCenteredQuestionBox("Are you sure you want to discontinue this program?");
@@ -139,7 +150,7 @@ public class ProgramMenu(IRepo repo)
                     return;
                 }
                 program.Status = ProgramStatus.Discontinued;
-                repo.UpdateProgram(program.ProgramId, program);
+                repo.UpdateProgram(program.Id, program);
                 break;
             case '2':
                 Boxes.DrawCenteredQuestionBox("Are you sure you want to permanently remove this program?");
@@ -168,7 +179,7 @@ public class ProgramMenu(IRepo repo)
                 }
                 
         
-                repo.RemoveProgram(program.ProgramId);
+                repo.RemoveProgram(program.Id);
                 Boxes.DrawCenteredBox($"Program {program.Code} removed from the record.");
                 break;
             default:
@@ -207,10 +218,12 @@ public class ProgramMenu(IRepo repo)
     {
         var program = SearchProgram();
         if (program is null) return;
-        var courses = repo.GetCourses();
+        var courses = repo.GetCourses().ToList();
         var programCourses = program.Courses.Select(x => x.Code).ToArray();
         var availableCourses = courses.Where(x => !programCourses.Contains(x.Code)).ToArray();
-        
-        // TODO: Create a TUI for adding and removing courses from a program
+        var selectedCoursesCode = Boxes.MultiSelectionBox(availableCourses.Select(x => x.Code).ToList());
+        var selectedCourses = courses.Where(x => selectedCoursesCode.Contains(x.Code)).ToArray();
+        program.Courses.AddRange(selectedCourses);
+        repo.UpdateProgram(program.Id, program);
     }
 }

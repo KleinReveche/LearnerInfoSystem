@@ -12,7 +12,7 @@ public static class MenuUtils
             System.Console.ForegroundColor = ConsoleColor.Green;
             var choices = actions.Select(x => Utils.NameRegex().Replace(x.Method.Name, " $1")).Append("Return").ToArray();
             var actionDictionary = GetActions(actions);
-            Boxes.DrawHeaderAndQuestionBox(title, "Choose your Action: ", choices, padding: 20);
+            Boxes.DrawHeaderAndQuestionBox(title, "Choose your Action: ", choices, padding: 20, zeroIndexed: true);
             System.Console.ResetColor();
             System.Console.Write("\nAction: ");
             var key = System.Console.ReadKey();
@@ -24,97 +24,27 @@ public static class MenuUtils
         }
     }
     
-    public static void NoPrograms()
+    public static void NotFoundPrompt(string type, bool add)
     {
-        Boxes.DrawCenteredBox("No programs found. Please add a program first.");
-        System.Console.ReadKey();
-    }
-
-    public static void NoStudents()
-    {
-        Boxes.DrawCenteredBox("No students found. Please add a student first.");
+        var addMsg = add ? $" Please add a {type} first." : "";
+        Boxes.DrawCenteredBox($"No {type} found.{addMsg}");
         System.Console.ReadKey();
     }
     
-    
-    public static void GetStringUpdate(string type, string old, out string updated)
-    {
-        Boxes.DrawCenteredQuestionBox($"{type} [{old}]: ");
-        updated = System.Console.ReadLine() ?? "";
-        if (string.IsNullOrEmpty(updated)) updated = old;
-    }
-
-    public static void GetNumberUpdate(string prompt, string old, out string updated)
-    {
-        Boxes.DrawCenteredQuestionBox($"{prompt} [{old}]: ");
-        var input = System.Console.ReadLine();
-        if (string.IsNullOrEmpty(input)) updated = old;
-
-        if (long.TryParse(input, out var n) && n > 0) updated = input;
-        updated = old;
-    }
-    
-    public static void GetEnumUpdate<T>(string prompt, T old, out T updated) where T : struct, Enum
-    {
-        Boxes.DrawCenteredQuestionBox($"{prompt} [{old}]: ");
-        var input = System.Console.ReadLine();
-        if (string.IsNullOrEmpty(input)) updated = old;
-
-        if (Enum.TryParse<T>(input, true, out var result)) updated = result;
-        updated = old;
-    }
-
-    public static void GetAcademicYear(out (int YearStart, int YearEnd) academicYear)
-    {
-        var academicYearStr = $"{DateTime.Now.Year}-{DateTime.Now.Year + 1}";
-        var inputParsed = Array.Empty<int>();
-        
-        while (true)
-        {
-            Boxes.DrawHeaderAndQuestionBox(Application.AppName, $"Enter the Academic Year [{academicYearStr}]: ");
-            var input = System.Console.ReadLine() ?? "";
-
-            try
-            {
-                inputParsed = input.Split('-').Select(int.Parse).ToArray();
-            }
-            catch
-            {
-                if (inputParsed.Length == 0)
-                {
-                    System.Console.Clear();
-                    break;
-                }
-
-                System.Console.WriteLine("Invalid input.");
-            }
-
-            if (inputParsed is not { Length: 2 }) continue;
-            System.Console.Clear();
-            break;
-        }
-
-        try
-        {
-            academicYear = (inputParsed[0], inputParsed[1]);
-        }
-        catch
-        {
-            academicYear = (DateTime.Now.Year, DateTime.Now.Year + 1);
-        }
-    }
-
-    public static Dictionary<char, Action> GetActions(IEnumerable<Action> actions)
+    private static Dictionary<char, Action> GetActions(IEnumerable<Action> actions)
     {
         var actionList = actions.ToList();
         var actionDict = new Dictionary<char, Action>();
         for (var i = 0; i < actionList.Count; i++)
         {
-            var index = i + 49;
-            if (i == 9) i = 48;
-            if (i > 9) index += 7;
-            
-            actionDict.Add((char) index, actionList[i]);
+            var asciiCode = i switch
+            {
+                < 10 => Convert.ToChar(i + 48), // Numbers 0-9
+                < 36 => Convert.ToChar(i + 55), // Uppercase A-Z
+                _ => throw new InvalidOperationException("Too many actions. Cannot assign a unique key to each action.")
+            };
+
+            actionDict.Add(asciiCode, actionList[i]);
         }
         return actionDict;
     }

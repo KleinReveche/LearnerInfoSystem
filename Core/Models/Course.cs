@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Reveche.SimpleLearnerInfoSystem.Models;
 
@@ -10,6 +11,7 @@ public class Course
     /// <summary>
     ///     The unique identifier for the course.
     /// </summary>
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required int Id { get; set; }
 
     /// <summary>
@@ -33,12 +35,18 @@ public class Course
     /// <summary>
     ///     The unique identifier of the instructor for the course.
     /// </summary>
+    [ForeignKey(nameof(User))]
     public required int InstructorId { get; set; }
 
     /// <summary>
     ///     The duration of the course in hours.
     /// </summary>
     public required int DurationInHours { get; set; }
+    
+    public required int Year { get; set; }
+    public required string Term { get; set; }
+    public required CourseType Type { get; set; }
+    
 }
 
 /// <summary>
@@ -101,4 +109,11 @@ public enum Status
     ///     It has been completed by the student.
     /// </summary>
     Completed
+}
+
+public enum CourseType
+{
+    Lecture,
+    Laboratory,
+    IndependentStudy,
 }

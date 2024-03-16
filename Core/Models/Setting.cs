@@ -1,4 +1,6 @@
-﻿namespace Reveche.SimpleLearnerInfoSystem.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Reveche.SimpleLearnerInfoSystem.Models;
 
 /// <summary>
 ///     Represents a setting in the learning system.
@@ -8,6 +10,7 @@ public class Setting
     /// <summary>
     ///     The unique identifier for the setting.
     /// </summary>
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required int Id { get; set; }
 
     /// <summary>
