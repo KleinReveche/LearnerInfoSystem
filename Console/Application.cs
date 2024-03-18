@@ -1,23 +1,31 @@
-﻿using CommandLine;
-using Reveche.SimpleLearnerInfoSystem.Console.Data;
-using Reveche.SimpleLearnerInfoSystem.Console.Presentation;
-using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using System.Text;
+using CommandLine;
+using Reveche.LearnerInfoSystem.Console.Data;
+using Reveche.LearnerInfoSystem.Console.Presentation;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console;
+namespace Reveche.LearnerInfoSystem.Console;
 
 public static class Application
 {
-    public const string AppName = "StudentBook";
+    public const string AppName = "LearnerInfoSystem";
     private static RepoType RepoType { get; set; }
-    public static (string Host, string Port, string Database, string Username, string Password) SqlCredentials { get; private set; }
-    public static string JsonFileName { get; private set; } = "StudentRecord.dat";
+
+    public static (string Host, string Port, string Database, string Username, string Password) SqlCredentials
+    {
+        get;
+        private set;
+    }
+
+    public static string JsonFileName { get; private set; } = "LearnerInfoSystem.dat";
 
     public static void Main(string[] args)
     {
-        System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+        System.Console.OutputEncoding = Encoding.UTF8;
+
         var parserResult = Parser.Default.ParseArguments<ApplicationOptions>(args);
-        var firstTime = !File.Exists(JsonFileName) && !File.Exists("SimpleLearnerInfoSystem.db");
-        
+        var firstTime = !File.Exists(JsonFileName) && !File.Exists("LearnerInfoSystem.db");
+
         try
         {
             parserResult.WithParsed(options =>
@@ -39,7 +47,7 @@ public static class Application
             System.Console.WriteLine("Invalid repo. Please use 'mysql', 'sqlite', or 'json'");
             Environment.Exit(1);
         }
-        
+
         parserResult.WithNotParsed(errors =>
         {
             foreach (var error in errors)
@@ -47,37 +55,37 @@ public static class Application
                 if (error is HelpRequestedError or VersionRequestedError) continue;
                 System.Console.WriteLine($"Error: {error}");
             }
+
             Environment.Exit(1);
         });
 
-        if (SqlCredentials is { Host: "none", Port: "3306", Username: "none", Password: "none" } && (int) RepoType > 1) 
+        if (SqlCredentials is { Host: "none", Port: "3306", Username: "none", Password: "none" } && (int)RepoType > 1)
             GetSqlCredentials();
-        
+
         var repo = RepoType switch
         {
             RepoType.Json => new JsonRepo() as IRepo,
-            // TODO: ADD MIGRATION FROM JSON TO SQL
             RepoType.Sqlite => new SqlRepo(new SqliteDbContext()),
             RepoType.Mysql => new SqlRepo(new MySqlDbContext()),
             _ => throw new ArgumentOutOfRangeException(nameof(args),
                 "Invalid argument. Please use 'mysql', 'sqlite', or 'json'")
         };
-        
+
 #if DEBUG
-        if (firstTime)
+        if (firstTime && false)
         {
             var randomData = new RandomData(repo);
             randomData.GenerateData();
         }
 #endif
-        
+
         var login = new Login(repo);
         login.Run(out var loggedInUser);
         switch (loggedInUser.Role)
         {
             case UserRole.Learner:
-                var student = new StudentMenu(repo, loggedInUser);
-                student.DisplayMenu();
+                var learner = new LearnerMenu(repo, loggedInUser);
+                learner.DisplayMenu();
                 break;
             case UserRole.Instructor:
                 var instructor = new InstructorMenu(repo, loggedInUser);
@@ -134,7 +142,6 @@ public static class Application
     }
 }
 
-
 // ReSharper disable once ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 public class ApplicationOptions
@@ -157,7 +164,7 @@ public class ApplicationOptions
 
     [Option('p', "password", Default = "none", Required = false, HelpText = "The password of the SQL server")]
     public string Password { get; set; } = "none";
-    
+
     [Option('j', "jsonName", Default = "StudentRecord.dat", Required = false, HelpText = "The name of the JSON file")]
     public string JsonFileName { get; set; } = "StudentRecord.dat";
 }

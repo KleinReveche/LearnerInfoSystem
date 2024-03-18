@@ -1,8 +1,8 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
-using Reveche.SimpleLearnerInfoSystem.Data;
-using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using Reveche.LearnerInfoSystem.Console.Data;
+using Reveche.LearnerInfoSystem.Data;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
+namespace Reveche.LearnerInfoSystem.Console.Presentation;
 
 public partial class AdminMenu(IRepo repo)
 {
@@ -36,7 +36,7 @@ public partial class AdminMenu(IRepo repo)
 
     private void AddUser(UserRole role, out User? user)
     {
-        var userType = role == UserRole.Learner ? "Student" : "Instructor";
+        var userType = role == UserRole.Learner ? "Learner" : "Instructor";
         var status = role == UserRole.Learner ? UserStatus.ActiveLearner : UserStatus.Instructing;
         var barangayEnabled = bool.Parse(repo.GetSetting(6)!.Value);
         var firstName = Utils.GetUserStringInput(userType + "'s First Name: ", StudentDialogPadding);
@@ -50,7 +50,7 @@ public partial class AdminMenu(IRepo repo)
         var instructorUserId = Utils.GetInstructorId(firstName, middleName, lastName, Users, instructorUserIdFormat);
         var email = Utils.GetEmail(firstName, middleName, lastName, repo.GetSetting(5)!.Value, Users,
             repo.GetSetting(4)!.Value);
-        var birthday = Utils.GetUserBirthDateInput("Birthdate:");
+        var birthday = Utils.GetUserBirthDateInput("Birthdate (YYYY-mm-dd):");
         var username = Utils.GetUserDefaultUsername(firstName, lastName, Users);
         var addrStreet = Utils.GetUserStringInput("Street Address:", StudentDialogPadding);
         var addrBarangay = string.Empty;
@@ -65,7 +65,7 @@ public partial class AdminMenu(IRepo repo)
         var userTmp = new User
         {
             Id = Utils.GetUniqueId(Users),
-            Role = UserRole.Learner,
+            Role = role,
             UserIdStr = role == UserRole.Learner ? learnerUserId : instructorUserId,
             FirstName = firstName,
             MiddleName = middleName,
@@ -98,8 +98,10 @@ public partial class AdminMenu(IRepo repo)
         }
 
         repo.AddUser(userTmp);
-        Boxes.DrawCenteredBox($"{userType} {fullName} added to the record.");
         user = userTmp;
+        
+        if (role == UserRole.Learner) return;
+        Boxes.DrawCenteredBox($"{userType} {fullName} added to the record.");
         System.Console.ReadKey();
     }
 
@@ -125,7 +127,7 @@ public partial class AdminMenu(IRepo repo)
             return;
         }
 
-        var userType = role == UserRole.Learner ? "Student" : "Instructor";
+        var userType = role == UserRole.Learner ? "Learner" : "Instructor";
         var foundUsers = QueryUserList("remove", UserRole.Learner);
 
         if (foundUsers is null)
@@ -155,7 +157,11 @@ public partial class AdminMenu(IRepo repo)
         if (key.Key == ConsoleKey.Delete)
         {
             Boxes.DrawCenteredQuestionBox($"Are you sure you want to remove all these {userType}? (Y/N): ");
-            if (System.Console.ReadKey().Key != ConsoleKey.Y) return;
+            if (System.Console.ReadKey().Key != ConsoleKey.Y) 
+            {
+                Boxes.DrawCenteredBox("Cancelled.");
+                return;
+            }
             foundUsers.ForEach(Remove);
             return;
         }
@@ -171,7 +177,11 @@ public partial class AdminMenu(IRepo repo)
         {
             Boxes.DrawCenteredQuestionBox($"Are you sure you want to remove {user.FullName}?");
             System.Console.Write("Y/N: ");
-            if (System.Console.ReadKey().Key != ConsoleKey.Y) return;
+            if (System.Console.ReadKey().Key != ConsoleKey.Y) 
+            {
+                Boxes.DrawCenteredBox("Cancelled.");
+                return;
+            }
 
             if (role == UserRole.Learner)
             {
@@ -180,7 +190,7 @@ public partial class AdminMenu(IRepo repo)
                 switch (System.Console.ReadKey().KeyChar)
                 {
                     case '1':
-                        Boxes.DrawCenteredQuestionBox("Are you sure you want to drop this student?");
+                        Boxes.DrawCenteredQuestionBox("Are you sure you want to drop this learner?");
                         System.Console.WriteLine("Y/N: ");
                         if (System.Console.ReadKey().Key != ConsoleKey.Y)
                         {
@@ -193,7 +203,7 @@ public partial class AdminMenu(IRepo repo)
                         repo.UpdateUser(user.Id, user);
                         break;
                     case '2':
-                        Boxes.DrawCenteredQuestionBox("Are you sure you want to suspend this student?");
+                        Boxes.DrawCenteredQuestionBox("Are you sure you want to suspend this learner?");
                         System.Console.Write("Y/N: ");
                         if (System.Console.ReadKey().Key != ConsoleKey.Y)
                         {
@@ -206,7 +216,7 @@ public partial class AdminMenu(IRepo repo)
                         repo.UpdateUser(user.Id, user);
                         break;
                     case '3':
-                        Boxes.DrawCenteredQuestionBox("Are you sure you want to expel this student?");
+                        Boxes.DrawCenteredQuestionBox("Are you sure you want to expel this learner?");
                         System.Console.Write("Y/N: ");
                         if (System.Console.ReadKey().Key != ConsoleKey.Y)
                         {
@@ -219,7 +229,7 @@ public partial class AdminMenu(IRepo repo)
                         repo.UpdateUser(user.Id, user);
                         break;
                     case '4':
-                        Boxes.DrawCenteredQuestionBox("Are you sure you want to permanently remove this student?");
+                        Boxes.DrawCenteredQuestionBox("Are you sure you want to permanently remove this learner?");
                         System.Console.Write("Y/N: ");
                         if (System.Console.ReadKey().Key != ConsoleKey.Y)
                         {
@@ -237,7 +247,7 @@ public partial class AdminMenu(IRepo repo)
                             return;
                         }
 
-                        Boxes.DrawCenteredQuestionBox("This will remove all records of this student. Are you sure?");
+                        Boxes.DrawCenteredQuestionBox("This will remove all records of this learner. Are you sure?");
                         System.Console.Write("Y/N: ");
                         if (System.Console.ReadKey().Key != ConsoleKey.Y)
                         {
@@ -248,7 +258,7 @@ public partial class AdminMenu(IRepo repo)
 
                         repo.RemoveProgramTracker(repo.GetProgramTracker(user.Id)!.Id);
                         repo.RemoveUser(user.Id);
-                        Boxes.DrawCenteredBox($"Student {user.FullName} removed from the record.");
+                        Boxes.DrawCenteredBox($"Learner {user.FullName} removed from the record.");
                         break;
                     default:
                         Boxes.DrawCenteredBox("Cancelled.");
@@ -377,7 +387,7 @@ public partial class AdminMenu(IRepo repo)
         Boxes.DrawCenteredBox($"Found {foundUsers.Count} {userType}s with the same name.");
         System.Console.ReadKey();
         System.Console.Clear();
-        var headers = new[] { "Index", "Name", "Student ID" };
+        var headers = new[] { "Index", "Name", "Learner ID" };
         var data = foundUsers.Select(x => new[] { Users.IndexOf(x).ToString(), x.FullName, x.UserIdStr }).ToArray();
         Boxes.CreateTable(headers, data);
 
@@ -421,11 +431,13 @@ public partial class AdminMenu(IRepo repo)
             Utils.GetStringUpdate("Email", original.Email, out var email);
             Utils.GetNumberUpdate("Phone Number", original.PhoneNumber.ToString(), out var phoneNumber);
             Utils.GetEnumUpdate("Status", original.Status, out var status);
-            var year = Boxes
-                .SingleSelectionBox(Enum.GetNames(typeof(LearnerYear)).ToList()
-                    .Where(x => x != "NotApplicable" && role != UserRole.Learner)
-                    .Select(x => x.Replace("Year", " Year"))
-                    .ToList()).Replace(" Year", "Year");
+            var year = original.Role == UserRole.Instructor
+                ? "NotApplicable"
+                : Boxes
+                    .SingleSelectionBox(Enum.GetNames(typeof(LearnerYear)).ToList()
+                        .Where(x => x != "NotApplicable" && role != UserRole.Learner)
+                        .Select(x => x.Replace("Year", " Year"))
+                        .ToList()).Replace(" Year", "Year");
 
             Boxes.DrawCenteredQuestionBox("Save [S] or Cancel [C] ");
             switch (System.Console.ReadLine()?.ToLower())
@@ -615,7 +627,11 @@ public partial class AdminMenu(IRepo repo)
         {
             Boxes.DrawCenteredQuestionBox($"Are you sure you want to reset password for {user.FullName}?");
             System.Console.Write("Y/N: ");
-            if (System.Console.ReadKey().Key != ConsoleKey.Y) return;
+            if (System.Console.ReadKey().Key != ConsoleKey.Y) 
+            {
+                Boxes.DrawCenteredBox("Cancelled.");
+                return;
+            }
             var defaultUserCredential = Default.DefaultUserCredential(repo.GetSetting(7)!.Value);
             user.PasswordHash = defaultUserCredential.hash;
             user.PasswordSalt = defaultUserCredential.salt;
@@ -781,7 +797,7 @@ public partial class AdminMenu(IRepo repo)
     {
         var countryInfos = CountryJsonRepo.GetCountryInfos();
         var headers = new[] { "ID", "Name", "Birthday", "Phone Number", "Truncated Address" };
-        var students = Users.Where(x => x.Role == UserRole.Learner)
+        var students = repo.GetLearners()
             .Select(x => new[]
             {
                 x.UserIdStr, x.FullName, x.BirthDate,

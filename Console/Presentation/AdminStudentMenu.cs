@@ -1,19 +1,19 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
-using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using Reveche.LearnerInfoSystem.Console.Data;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
+namespace Reveche.LearnerInfoSystem.Console.Presentation;
 
 public partial class AdminMenu
 {
     private const int StudentDialogPadding = 30;
-    
+
     private void ManageStudent()
     {
         Action[] actions = [AddStudent, RemoveStudent, UpdateStudent, ResetStudentPassword, DisplayStudentList];
-        
+
         MenuUtils.DisplayMenu("Manage Students", actions);
     }
-    
+
     private void AddStudent()
     {
         if (Programs.Count == 0)
@@ -22,13 +22,15 @@ public partial class AdminMenu
             return;
         }
 
-        AddUser(UserRole.Learner, out var student);
-        if (student is null) return;
-        
-        var program = GetProgram("Program: ");
+        AddUser(UserRole.Learner, out var learner);
+        if (learner is null) return;
+
+        var programs = Programs.Select(x => x.Code).ToList();
+        var programCode = Boxes.SingleSelectionBox(programs);
+        var program = Programs.Find(x => x.Code == programCode)!;
         var programTracker = new ProgramTracker
         {
-            UserId = student.Id,
+            UserId = learner.Id,
             Programs =
             [
                 new ProgramProgress
@@ -39,31 +41,14 @@ public partial class AdminMenu
                 }
             ],
             Id = Utils.GetUniqueId(repo.GetProgramTrackers()),
-            Courses = Utils.GetDefaultCourses(student, program, repo.GetCourseCompletions())
+            Courses = Utils.GetDefaultCourses(learner, program, repo.GetCourseCompletions())
         };
-        
-        repo.AddProgramTracker(programTracker);
-        System.Console.ReadKey();
-        
-        return;
 
-        Program GetProgram(string prompt)
-        {
-            while (true)
-            {
-                System.Console.Clear();
-                var programs = Programs;
-                System.Console.WriteLine("\nAvailable Programs:");
-                var programList = programs.Select(x => x.Code).ToList();
-                Application.Print(programList, true);
-                Boxes.DrawCenteredQuestionBox(prompt, clear: false);
-                var inputProgram = System.Console.ReadLine() ?? "";
-                var p = programs.FirstOrDefault(x => x.Code.Equals(inputProgram, StringComparison.OrdinalIgnoreCase));
-                if (p is not null) return p;
-            }
-        }
+        repo.AddProgramTracker(programTracker);
+        Boxes.DrawCenteredBox($"Student {learner.FullName} added to the record.");
+        System.Console.ReadKey();
     }
-    
+
     private void RemoveStudent() => RemoveUser(UserRole.Learner);
     private void ResetStudentPassword() => ResetPassword(UserRole.Learner);
     private void UpdateStudent() => UpdateUser(UserRole.Learner);

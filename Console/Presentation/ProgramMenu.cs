@@ -1,7 +1,7 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
-using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using Reveche.LearnerInfoSystem.Console.Data;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
+namespace Reveche.LearnerInfoSystem.Console.Presentation;
 
 public class ProgramMenu(IRepo repo)
 {
@@ -17,31 +17,34 @@ public class ProgramMenu(IRepo repo)
     private void AddProgram()
     {
         var courses = repo.GetCourses().ToList();
+        var programCourses = new List<Course>();
         var programCode = Utils.GetUserStringInput("Program Code: ");
         var programTitle = Utils.GetUserStringInput("Program Title: ", 50);
         var programDescription = Utils.GetUserStringInput("Program Description: ", 65);
+        if (courses.Count == 0) goto add;
         var programCoursesSelectedCode = Boxes.MultiSelectionBox(courses.Select(x => x.Code).ToList());
-        var programCourses = courses.Where(x => programCoursesSelectedCode.Contains(x.Code)).ToList();
-        
+        programCourses = courses.Where(x => programCoursesSelectedCode.Contains(x.Code)).ToList();
+
         if (GetPrograms.Any(x => x.Code == programCode || x.Title == programTitle))
         {
             Boxes.DrawCenteredBox("Program already exists.");
             return;
         }
-
+        
+        add:
         var programId = GetPrograms.Count + 1;
         while (GetPrograms.Any(x => x.Id == programId)) programId++;
 
         var newProgram = new Program
         {
-            Code = programCode, 
-            Title = programTitle, 
-            Id = programId, 
-            Description = programDescription, 
+            Code = programCode,
+            Title = programTitle,
+            Id = programId,
+            Description = programDescription,
             Status = ProgramStatus.Active,
             Courses = programCourses
         };
-        
+
         repo.AddProgram(newProgram);
         Boxes.DrawCenteredBox($"Program {programCode} added to the record.");
         System.Console.ReadKey();
@@ -54,9 +57,9 @@ public class ProgramMenu(IRepo repo)
             MenuUtils.NotFoundPrompt("program", true);
             return;
         }
-        
-        var headers = new[] { "Code", "Program" };
-        var programs = GetPrograms.Select(x => new[] { x.Code, x.Title }).ToArray();
+
+        var headers = new[] { "Code", "Program", "Description" };
+        var programs = GetPrograms.Select(x => new[] { x.Code, x.Title, x.Description }).ToArray();
         Boxes.CreateLazyTable(headers, programs);
         System.Console.ReadKey();
     }
@@ -68,7 +71,7 @@ public class ProgramMenu(IRepo repo)
             MenuUtils.NotFoundPrompt("program", true);
             return;
         }
-        
+
         var program = SearchProgram();
         if (program is null) return;
 
@@ -87,7 +90,11 @@ public class ProgramMenu(IRepo repo)
         Boxes.DrawCenteredQuestionBox($"Are you sure you want to update {program.Code} to {newProgramCode}?");
         System.Console.Write("Y/N: ");
         var key = System.Console.ReadKey();
-        if (key.Key != ConsoleKey.Y) return;
+        if (key.Key != ConsoleKey.Y)
+        {
+            Boxes.DrawCenteredBox("Cancelled.");
+            return;
+        }
 
         repo.UpdateProgram(program.Id, new Program
         {
@@ -98,7 +105,7 @@ public class ProgramMenu(IRepo repo)
             Courses = program.Courses,
             Status = newProgramStatus
         });
-        
+
         Boxes.DrawCenteredBox($"Program {program.Code} updated to {newProgramCode}.");
         System.Console.ReadKey();
     }
@@ -110,7 +117,7 @@ public class ProgramMenu(IRepo repo)
             MenuUtils.NotFoundPrompt("program", true);
             return;
         }
-        
+
         var program = SearchProgram();
 
         if (program is null)
@@ -123,12 +130,17 @@ public class ProgramMenu(IRepo repo)
         Boxes.DrawCenteredQuestionBox($"Are you sure you want to remove {program.Code}?");
         System.Console.Write("Y/N: ");
         var key = System.Console.ReadKey();
-        if (key.Key != ConsoleKey.Y) return;
-        
-        Boxes.DrawHeaderAndQuestionBox(Application.AppName, "What kind of removal?", [ "Suspended", "Discontinued", "Permanent" ], zeroIndexed: true);
+        if (key.Key != ConsoleKey.Y) 
+        {
+            Boxes.DrawCenteredBox("Cancelled.");
+            return;
+        }
+
+        Boxes.DrawHeaderAndQuestionBox(Application.AppName, "What kind of removal?",
+            ["Suspended", "Discontinued", "Permanent"], zeroIndexed: true);
         switch (System.Console.ReadKey().KeyChar)
         {
-            case '0': 
+            case '0':
                 Boxes.DrawCenteredQuestionBox("Are you sure you want to suspend this program?");
                 System.Console.Write("Y/N: ");
                 if (System.Console.ReadKey().Key != ConsoleKey.Y)
@@ -137,6 +149,7 @@ public class ProgramMenu(IRepo repo)
                     System.Console.ReadKey();
                     return;
                 }
+
                 program.Status = ProgramStatus.Suspended;
                 repo.UpdateProgram(program.Id, program);
                 break;
@@ -149,6 +162,7 @@ public class ProgramMenu(IRepo repo)
                     System.Console.ReadKey();
                     return;
                 }
+
                 program.Status = ProgramStatus.Discontinued;
                 repo.UpdateProgram(program.Id, program);
                 break;
@@ -161,6 +175,7 @@ public class ProgramMenu(IRepo repo)
                     System.Console.ReadKey();
                     return;
                 }
+
                 Boxes.DrawCenteredQuestionBox("Only do this if you are sure. This action is irreversible.");
                 System.Console.Write("Y/N: ");
                 if (System.Console.ReadKey().Key != ConsoleKey.Y)
@@ -169,6 +184,7 @@ public class ProgramMenu(IRepo repo)
                     System.Console.ReadKey();
                     return;
                 }
+
                 Boxes.DrawCenteredQuestionBox("This will remove all records of this program. Are you sure?");
                 System.Console.Write("Y/N: ");
                 if (System.Console.ReadKey().Key != ConsoleKey.Y)
@@ -177,8 +193,8 @@ public class ProgramMenu(IRepo repo)
                     System.Console.ReadKey();
                     return;
                 }
-                
-        
+
+
                 repo.RemoveProgram(program.Id);
                 Boxes.DrawCenteredBox($"Program {program.Code} removed from the record.");
                 break;
@@ -186,6 +202,7 @@ public class ProgramMenu(IRepo repo)
                 Boxes.DrawCenteredBox("Cancelled.");
                 return;
         }
+
         System.Console.ReadKey();
     }
 
@@ -221,6 +238,12 @@ public class ProgramMenu(IRepo repo)
         var courses = repo.GetCourses().ToList();
         var programCourses = program.Courses.Select(x => x.Code).ToArray();
         var availableCourses = courses.Where(x => !programCourses.Contains(x.Code)).ToArray();
+        if (availableCourses.Length == 0)
+        {
+            Boxes.DrawCenteredBox("No courses available to add.");
+            System.Console.ReadKey();
+            return;
+        }
         var selectedCoursesCode = Boxes.MultiSelectionBox(availableCourses.Select(x => x.Code).ToList());
         var selectedCourses = courses.Where(x => selectedCoursesCode.Contains(x.Code)).ToArray();
         program.Courses.AddRange(selectedCourses);

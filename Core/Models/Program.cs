@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Reveche.SimpleLearnerInfoSystem.Models;
+namespace Reveche.LearnerInfoSystem.Models;
 
 /// <summary>
 ///     Represents a program in the learning system.
@@ -12,7 +12,7 @@ public class Program
     ///     The unique identifier for the program.
     /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public required int Id { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
     ///     The title of the program. The maximum length is 255 characters.
@@ -36,7 +36,7 @@ public class Program
     ///     The list of courses that are part of the program.
     /// </summary>
     public List<Course> Courses { get; set; } = [];
-    
+
     /// <summary>
     ///     The status of the program.
     /// </summary>

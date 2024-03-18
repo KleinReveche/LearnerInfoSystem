@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem;
+namespace Reveche.LearnerInfoSystem;
 
 public interface IRepo
 {
@@ -132,7 +131,7 @@ public interface IRepo
     /// <param name="id">The id of the course completion to get.</param>
     /// <returns>The course completion with the given id.</returns>
     CourseCompletion? GetCourseCompletion(int id);
-    
+
     /// <summary>
     ///     Adds a new ProgramTracker to the repository.
     /// </summary>
@@ -200,12 +199,19 @@ public interface IRepo
     /// <param name="loggedInUser">The user that was logged in.</param>
     /// <returns>True iƒ the user is logged in, otherwise false.</returns>
     bool Login(string username, string email, string password, out User? loggedInUser);
-    
+
     void AddCourses(IEnumerable<Course> courses);
     void AddPrograms(IEnumerable<Program> programs);
     void AddUsers(IEnumerable<User> users);
     void AddCourseCompletions(IEnumerable<CourseCompletion> courseCompletions);
     void AddProgramTrackers(IEnumerable<ProgramTracker> programTrackers);
+    List<User> GetLearners();
+    List<User> GetInstructors();
+    List<CourseCompletion> GetCourseCompletionsByUser(int userId);
+    List<ProgramTracker> GetProgramTrackersByUser(int userId);
+    List<Course> GetCoursesByInstructor(int instructorId);
+    List<User> GetStudentsByCourse(int courseId);
+    User? GetUserByFullName(string fullName);
 }
 
 public enum RepoType

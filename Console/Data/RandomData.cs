@@ -1,7 +1,8 @@
 ﻿using Faker;
-using Reveche.SimpleLearnerInfoSystem.Models;
+using Reveche.LearnerInfoSystem.Models;
+using Country = Faker.Country;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public class RandomData(IRepo repo)
 {
@@ -19,21 +20,23 @@ public class RandomData(IRepo repo)
         using var file = new StreamReader("CourseTestingData.csv");
         var instructors = repo.GetUsers().Where(u => u.Role == UserRole.Instructor).ToList();
         var generatedCourses = new List<Course>();
+        var units = new List<int> { 1, 2, 3, 4, 5 };
         var counter = 0;
-        
+
         foreach (var line in file.ReadToEnd().Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Skip(1))
         {
             var data = line.Split(",");
             var code = data[2] + data[03];
             var random = new Random();
-            
+
             if (generatedCourses.Any(c => c.Code == code)) continue;
+            var desc = data[5].Replace("&comma", ",").Replace("&amp;", "&");
             var course = new Course
             {
                 Id = counter,
                 Code = code,
-                Title = data[4],
-                Description = data[5].Replace("&comma", ","),
+                Title = data[4].Replace("&comma", ",").Replace("&amp;", "&"),
+                Description = desc.Length > 255 ? desc[..252] + "..." : desc,
                 InstructorId = instructors[random.Next(0, instructors.Count - 1)].Id,
                 Year = int.Parse(data[0]),
                 Term = data[1],
@@ -44,7 +47,8 @@ public class RandomData(IRepo repo)
                     "LAB" => CourseType.Laboratory,
                     "IND" => CourseType.IndependentStudy,
                     _ => CourseType.Lecture
-                }
+                },
+                Units = units[random.Next(0, units.Count - 1)]
             };
             generatedCourses.Add(course);
             counter++;
@@ -62,14 +66,14 @@ public class RandomData(IRepo repo)
         {
             var data = line.Split(",");
             var randomCourses = new List<Course>();
-            
+
             for (var i = 0; i < 10; i++)
             {
                 var random = new Random();
                 var randomCourse = courses[random.Next(0, courses.Count - 1)];
                 if (!randomCourses.Contains(randomCourse)) randomCourses.Add(randomCourse);
             }
-            
+
             var program = new Program
             {
                 Id = int.Parse(data[0]),
@@ -81,9 +85,10 @@ public class RandomData(IRepo repo)
             };
             generatedPrograms.Add(program);
         }
+
         repo.AddPrograms(generatedPrograms);
     }
-    
+
     private void GenerateStudents(int count)
     {
         var users = repo.GetUsers();
@@ -120,18 +125,19 @@ public class RandomData(IRepo repo)
                 _ => UserStatus.ActiveLearner
             };
             users.AddRange(learners);
-            var student = GenerateUser(firstName, middleName, lastName, fullName, year, status, users);
-            learners.Add(student);
+            var learner = GenerateUser(firstName, middleName, lastName, fullName, year, status, users);
+            learners.Add(learner);
 
-            GenerateProgramForLearner(student, out var courseCompletionsT, out var programTracker);
+            GenerateProgramForLearner(learner, out var courseCompletionsT, out var programTracker);
             courseCompletions.AddRange(courseCompletionsT);
             programTrackers.Add(programTracker);
         }
+
         repo.AddUsers(learners);
         repo.AddCourseCompletions(courseCompletions);
         repo.AddProgramTrackers(programTrackers);
     }
-    
+
     private void GenerateInstructors(int count)
     {
         var users = repo.GetUsers();
@@ -143,12 +149,15 @@ public class RandomData(IRepo repo)
             var lastName = Name.Last();
             var fullName = $"{firstName} {middleName} {lastName}";
             users.AddRange(instructors);
-            instructors.Add(GenerateUser(firstName, middleName, lastName, fullName, LearnerYear.NotApplicable, UserStatus.Instructing, users, false));
+            instructors.Add(GenerateUser(firstName, middleName, lastName, fullName, LearnerYear.NotApplicable,
+                UserStatus.Instructing, users, false));
         }
+
         repo.AddUsers(instructors);
     }
 
-    private User GenerateUser(string firstName, string middleName, string lastName, string fullName, LearnerYear year, UserStatus status, List<User> users, bool isLearner = true)
+    private User GenerateUser(string firstName, string middleName, string lastName, string fullName, LearnerYear year,
+        UserStatus status, List<User> users, bool isLearner = true)
     {
         var (hash, salt) = Default.DefaultUserCredential();
         var random = new Random();
@@ -168,37 +177,39 @@ public class RandomData(IRepo repo)
             AddressBarangay = Address.SecondaryAddress(),
             AddressCity = Address.City(),
             AddressProvince = Address.UsState(),
-            AddressCountryCode = Faker.Country.TwoLetterCode(),
+            AddressCountryCode = Country.TwoLetterCode(),
             PhoneNumber = random.Next(1000, 1000000),
             Email = Utils.GetEmail(firstName, middleName, lastName, repo.GetSetting(5)!.Value, users),
             RegistrationDate = DateTime.Now,
-            UserIdStr = isLearner ? Utils.GetLearnerId(2023, 2024, users) : 
-                Utils.GetInstructorId(firstName, middleName, lastName, users),
+            UserIdStr = isLearner
+                ? Utils.GetLearnerId(2023, 2024, users)
+                : Utils.GetInstructorId(firstName, middleName, lastName, users),
             YearLevel = year,
             Status = status,
             AddressZipCode = Address.ZipCode()
         };
-        
+
         return user;
     }
-    
-    
-    private void GenerateProgramForLearner(User learner, out List<CourseCompletion> courseCompletions, out ProgramTracker programTracker)
+
+
+    private void GenerateProgramForLearner(User learner, out List<CourseCompletion> courseCompletions,
+        out ProgramTracker programTracker)
     {
         var randomProgram = repo.GetPrograms().OrderBy(_ => Guid.NewGuid()).First();
         var courseCompletionsTemp = (from course in randomProgram.Courses
-        let random = new Random()
-        let isDone = random.Next(0, 100) > 50
-        select new CourseCompletion
-        {
-            Id = Utils.GetUniqueId(repo.GetCourseCompletions()),
-            UserId = learner.Id,
-            CourseId = course.Id,
-            InstructorId = course.InstructorId,
-            Status = isDone ? Status.Completed : Status.InProgress,
-            DateCompleted = isDone ? DateTime.Now : null,
-            Grade = isDone ? RandomNumber.Next(75, 100) : null
-        }).ToList();
+            let random = new Random()
+            let isDone = random.Next(0, 100) > 50
+            select new CourseCompletion
+            {
+                Id = Utils.GetUniqueId(repo.GetCourseCompletions()),
+                UserId = learner.Id,
+                CourseId = course.Id,
+                InstructorId = course.InstructorId,
+                Status = isDone ? Status.Completed : Status.InProgress,
+                DateCompleted = isDone ? DateTime.Now : null,
+                Grade = isDone ? RandomNumber.Next(75, 100) : null
+            }).ToList();
 
         var learnerCourses = repo.GetCourseCompletions().Where(c => c.UserId == learner.Id).ToList();
         var programDone = learnerCourses.All(c => c.Status == Status.Completed);
@@ -208,7 +219,7 @@ public class RandomData(IRepo repo)
             Status = programDone ? Status.Completed : Status.InProgress,
             DateCompleted = programDone ? DateTime.Now : null
         };
-        
+
         var tracker = new ProgramTracker
         {
             UserId = learner.Id,
@@ -216,7 +227,7 @@ public class RandomData(IRepo repo)
             Programs = [programProgress],
             Courses = learnerCourses
         };
-        
+
         programTracker = tracker;
         courseCompletions = courseCompletionsTemp;
     }

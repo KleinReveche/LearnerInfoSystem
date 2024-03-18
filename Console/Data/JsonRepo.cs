@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Reveche.SimpleLearnerInfoSystem.Models;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public class JsonRepo : IRepo
 {
@@ -53,10 +53,7 @@ public class JsonRepo : IRepo
 
     public List<User> GetUsers() => GetInfo().Users;
 
-    public User? GetUser(int id)
-    {
-        return GetInfo().Users.Find(u => u.Id == id);
-    }
+    public User? GetUser(int id) => GetInfo().Users.Find(u => u.Id == id);
 
     public void AddProgram(Program program)
     {
@@ -83,10 +80,7 @@ public class JsonRepo : IRepo
 
     public List<Program> GetPrograms() => GetInfo().Programs;
 
-    public Program? GetProgram(int id)
-    {
-        return GetInfo().Programs.Find(p => p.Id == id);
-    }
+    public Program? GetProgram(int id) => GetInfo().Programs.Find(p => p.Id == id);
 
     public void AddCourse(Course course)
     {
@@ -139,7 +133,7 @@ public class JsonRepo : IRepo
     public IEnumerable<CourseCompletion> GetCourseCompletions() => GetInfo().CourseCompletions;
 
     public CourseCompletion? GetCourseCompletion(int id) => GetInfo().CourseCompletions.Find(cc => cc.Id == id);
-    
+
     public void AddProgramTracker(ProgramTracker programTracker)
     {
         var data = GetInfo();
@@ -164,10 +158,7 @@ public class JsonRepo : IRepo
 
     public IEnumerable<ProgramTracker> GetProgramTrackers() => GetInfo().ProgramTrackers;
 
-    public ProgramTracker? GetProgramTracker(int id)
-    {
-        return GetInfo().ProgramTrackers.Find(pt => pt.UserId == id);
-    }
+    public ProgramTracker? GetProgramTracker(int id) => GetInfo().ProgramTrackers.Find(pt => pt.UserId == id);
 
     public void AddSetting(Setting setting)
     {
@@ -186,10 +177,7 @@ public class JsonRepo : IRepo
 
     public List<Setting> GetSettings() => GetInfo().Settings;
 
-    public Setting? GetSetting(int id)
-    {
-        return GetInfo().Settings.Find(s => s.Id == id);
-    }
+    public Setting? GetSetting(int id) => GetInfo().Settings.Find(s => s.Id == id);
 
 
     public bool Login(string username, string email, string password, out User? loggedInUser)
@@ -243,34 +231,62 @@ public class JsonRepo : IRepo
         data.Courses.AddRange(courses);
         SaveData(data);
     }
-    
+
     public void AddPrograms(IEnumerable<Program> programs)
     {
         var data = GetInfo();
         data.Programs.AddRange(programs);
         SaveData(data);
     }
-    
+
     public void AddUsers(IEnumerable<User> users)
     {
         var data = GetInfo();
         data.Users.AddRange(users);
         SaveData(data);
     }
-    
+
     public void AddCourseCompletions(IEnumerable<CourseCompletion> courseCompletions)
     {
         var data = GetInfo();
         data.CourseCompletions.AddRange(courseCompletions);
         SaveData(data);
     }
-    
+
     public void AddProgramTrackers(IEnumerable<ProgramTracker> programTrackers)
     {
         var data = GetInfo();
         data.ProgramTrackers.AddRange(programTrackers);
         SaveData(data);
     }
+
+    public List<User> GetLearners() => GetInfo().Users.FindAll(u => u.Role == UserRole.Learner);
+
+    public List<User> GetInstructors() => GetInfo().Users.FindAll(u => u.Role == UserRole.Instructor);
+
+    public List<CourseCompletion> GetCourseCompletionsByUser(int userId) =>
+        GetInfo().CourseCompletions.FindAll(cc => cc.UserId == userId);
+
+    public List<ProgramTracker> GetProgramTrackersByUser(int userId) =>
+        GetInfo().ProgramTrackers.FindAll(pt => pt.UserId == userId);
+
+    public List<Course> GetCoursesByInstructor(int instructorId) =>
+        GetInfo().Courses.FindAll(c => c.InstructorId == instructorId);
+
+    public List<User> GetStudentsByCourse(int courseId) => GetInfo().Users
+        .FindAll(u => GetCourseCompletionsByCourse(courseId).Any(cc => cc.UserId == u.Id));
+
+    public User? GetUserByFullName(string fullName) => GetInfo().Users.Find(u => u.FullName == fullName);
+
+    public List<CourseCompletion> GetCourseCompletionsByCourse(int courseId) =>
+        GetInfo().CourseCompletions.FindAll(cc => cc.CourseId == courseId);
+
+    public List<ProgramTracker> GetProgramTrackersByProgram(int programId) => GetInfo().ProgramTrackers
+        .FindAll(pt => pt.Programs.Any(p => p.ProgramId == programId));
+
+    public List<Course> GetCoursesByCourseCompletions(IEnumerable<CourseCompletion> courseCompletions) =>
+        GetInfo().Courses.FindAll(c => courseCompletions.Any(cc => cc.CourseId == c.Id));
+
 
     private void Initialize()
     {

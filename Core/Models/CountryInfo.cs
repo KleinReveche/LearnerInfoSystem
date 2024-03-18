@@ -1,4 +1,4 @@
-﻿namespace Reveche.SimpleLearnerInfoSystem.Models;
+﻿namespace Reveche.LearnerInfoSystem.Models;
 
 public class CountryInfo
 {

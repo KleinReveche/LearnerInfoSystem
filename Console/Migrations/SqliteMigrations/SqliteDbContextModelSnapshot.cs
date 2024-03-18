@@ -3,11 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Reveche.SimpleLearnerInfoSystem.Console.Data;
+using Reveche.LearnerInfoSystem.Console.Data;
 
 #nullable disable
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
+namespace Reveche.LearnerInfoSystem.Console.Migrations.SqliteMigrations
 {
     [DbContext(typeof(SqliteDbContext))]
     partial class SqliteDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.Course", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("INTEGER");
@@ -53,6 +53,9 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Units")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Year")
                         .HasColumnType("INTEGER");
 
@@ -63,7 +66,7 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.CourseCompletion", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.CourseCompletion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,10 +100,9 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("CourseCompletions");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.Program", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.Program", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
@@ -126,7 +128,7 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("Programs");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.ProgramProgress", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.ProgramProgress", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,7 +153,7 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("ProgramProgress");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.ProgramTracker", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.ProgramTracker", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,7 +167,7 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("ProgramTrackers");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.Setting", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.Setting", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("INTEGER");
@@ -198,10 +200,9 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.User", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.User", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(255)
                         .HasColumnType("INTEGER");
 
@@ -302,33 +303,33 @@ namespace Reveche.SimpleLearnerInfoSystem.Console.Migrations.SqliteMigrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.Course", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.Course", b =>
                 {
-                    b.HasOne("Reveche.SimpleLearnerInfoSystem.Models.Program", null)
+                    b.HasOne("Reveche.LearnerInfoSystem.Models.Program", null)
                         .WithMany("Courses")
                         .HasForeignKey("ProgramId");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.CourseCompletion", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.CourseCompletion", b =>
                 {
-                    b.HasOne("Reveche.SimpleLearnerInfoSystem.Models.ProgramTracker", null)
+                    b.HasOne("Reveche.LearnerInfoSystem.Models.ProgramTracker", null)
                         .WithMany("Courses")
                         .HasForeignKey("ProgramTrackerId");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.ProgramProgress", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.ProgramProgress", b =>
                 {
-                    b.HasOne("Reveche.SimpleLearnerInfoSystem.Models.ProgramTracker", null)
+                    b.HasOne("Reveche.LearnerInfoSystem.Models.ProgramTracker", null)
                         .WithMany("Programs")
                         .HasForeignKey("ProgramTrackerId");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.Program", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.Program", b =>
                 {
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("Reveche.SimpleLearnerInfoSystem.Models.ProgramTracker", b =>
+            modelBuilder.Entity("Reveche.LearnerInfoSystem.Models.ProgramTracker", b =>
                 {
                     b.Navigation("Courses");
 

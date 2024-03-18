@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Reveche.SimpleLearnerInfoSystem.Models;
+namespace Reveche.LearnerInfoSystem.Models;
 
 /// <summary>
 ///     Represents a course in the learning system.
@@ -12,7 +12,7 @@ public class Course
     ///     The unique identifier for the course.
     /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public required int Id { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
     ///     The title of the course. The maximum length is 255 characters.
@@ -42,25 +42,25 @@ public class Course
     ///     The duration of the course in hours.
     /// </summary>
     public required int DurationInHours { get; set; }
-    
+
     public required int Year { get; set; }
     public required string Term { get; set; }
     public required CourseType Type { get; set; }
-    
+    public required int Units { get; set; }
 }
 
 /// <summary>
-///     Represents the completion status of a course by a student.
+///     Represents the completion status of a course by a learner.
 /// </summary>
 public class CourseCompletion
 {
     /// <summary>
     ///     The unique identifier for the course completion record.
     /// </summary>
-    public required int Id { get; set; }
+    public required int Id { get; init; }
 
     /// <summary>
-    ///     The unique identifier of the student.
+    ///     The unique identifier of the learner.
     /// </summary>
     public required int UserId { get; set; }
 
@@ -68,7 +68,7 @@ public class CourseCompletion
     ///     The unique identifier of the course.
     /// </summary>
     public required int CourseId { get; set; }
-    
+
     /// <summary>
     ///     The unique identifier of the instructor for the course.
     /// </summary>
@@ -85,7 +85,7 @@ public class CourseCompletion
     public DateTime? DateCompleted { get; set; }
 
     /// <summary>
-    ///     The grade of the student for the course. Null if the course is not yet graded.
+    ///     The grade of the learner for the course. Null if the course is not yet graded.
     /// </summary>
     public double? Grade { get; set; }
 }
@@ -96,17 +96,17 @@ public class CourseCompletion
 public enum Status
 {
     /// <summary>
-    ///     It has not been started yet by the student.
+    ///     It has not been started yet by the learner.
     /// </summary>
     NotStarted,
 
     /// <summary>
-    ///     It is currently in progress by the student.
+    ///     It is currently in progress by the learner.
     /// </summary>
     InProgress,
 
     /// <summary>
-    ///     It has been completed by the student.
+    ///     It has been completed by the learner.
     /// </summary>
     Completed
 }
@@ -115,5 +115,5 @@ public enum CourseType
 {
     Lecture,
     Laboratory,
-    IndependentStudy,
+    IndependentStudy
 }

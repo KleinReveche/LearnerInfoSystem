@@ -1,0 +1,553 @@
+﻿ProgramId,Title,Code
+0,Bachelor of Liberal Arts,ALB
+1,Doctor of Musical Arts,AMUSD
+2,Associate of Arts,AA
+3,Associate of Applied Arts,AAA
+4,Associate of Applied Business,AAB
+5,Associate in Allied Health,AAH
+6,Associate of Arts in Nursing,AAN
+7,Associate in Applied Science,AAS
+8,Associate of Arts and Sciences,AAS
+9,Associate of Arts in Teaching,AAT
+10,Associate of Applied Technology,AAT
+11,Associate in Business,AB
+12,Bachelor of Arts,AB
+13,Associate of Business Administration,ABA
+14,Bachelor of Liberal Arts,ABL
+15,Associate Degree,AD
+16,Associate Degree of Building Design,ADBLDGDES
+17,Associate Degree of Building Surveying,ADBLDGSURV
+18,Associate Degree of Business,ADBUS
+19,Associate Degree of Engineering,ADENG
+20,Associate Degree of Information Technology,ADIT
+21,Associate Degree of Journalism,ADJOUR
+22,Associate Degree of Learning Management,ADLM
+23,Associate Degree of Multimedia Studies,ADMMST
+24,Associate Degree in Nursing,ADN
+25,Associate of Engineering,AE
+26,Alternate Entry Master of Science in Nursing,AEMSN
+27,Associate of Engineering Science,AES
+28,Associate in Engineering Technology,AET
+29,Associate of Forestry,AF
+30,Associate of Fine Arts,AFA
+31,Associate of General Studies,AGS
+32,Associate of Industrial Technology,AIT
+33,Master of Liberal Arts,ALM
+34,Associate in Medical Science,AMSC
+35,Associate of Nursing,AN
+36,Associate in Occupational Studies,AOS
+37,Associate in Occupational Technology,AOT
+38,Associate of Public Service,APS
+39,Associate of Political science,APS
+40,Associate in Physical Therapy,APT
+41,Associate of Science,AS
+42,Associate of Science in Dental Hygiene,ASDN
+43,Associate of Science in Nursing,ASN
+44,Associate in Physical Therapy,ASPT
+45,Associate Degree of Computing,ASSOCDEGCOMP
+46,Associate Degree of Technology,ASSOCDEGTECH
+47,Associate Degree of Technology Management,ASSOCDEGTECHMGT
+48,Associate of Technology,AT
+49,Doctor of Audiology,AUD
+50,Bachelor of Arts,BA
+51,Bachelor of Applied Arts,BAA
+52,Bachelor of Applied Arts and Sciences,BAAS
+53,Bachelor of Arts in Communication,BACOM
+54,Bachelor of Aerospace Engineering,BAE
+55,Bachelor of Arts and Economics,BAE
+56,Bachelor of Economics,BAECON
+57,Bachelor of Arts in Education,BAED
+58,Bachelor of Applied Studies,BAS
+59,Bachelor of Applied Science,BAS
+60,Bachelor of Architectural Studies,BAS
+61,Bachelor of Applied Science,BASC
+62,Bachelor of Art & Technology,BAT
+63,Bachelor of Applied Technology,BATECH
+64,Bachelor of Accountancy,BACC
+65,Bachelor of Agricultural Science,BAGRSC
+66,Bachelor of Applied Finance,BAPPFIN
+67,Bachelor of Applied Science,BAPPSC
+68,Bachelor of Architecture,BARCH
+69,Bachelor of Asian Studies,BAS
+70,Bachelor of Business Analysis - Financial,BBAFIN
+71,Bachelor of Business Administration,BBA
+72,Bachelor of Built Environment,BBE
+73,Bachelor of Biosystems Engineering,BBE
+74,Bachelor of Behavioural Neuroscience,BBNSC
+75,Bachelor of Business,BBUS
+76,Bachelor of Commerce and Administration,BCA
+77,Bachelor of Civil Engineering,BCE
+78,Bachelor of Computer Information Systems,BCIS
+79,Bachelor of Criminal Justice,BCJ
+80,Bachelor of Computer and Mathematical Sciences,BCM
+81,Bachelor of Computing & Mathematical Sciences,BCMS
+82,Bachelor of Surgery,BCH
+83,Bachelor of Chemical Engineering,BCHEE
+84,Bachelor of Commerce,BCOM
+85,Bachelor of Commerce,BCOMM
+86,Bachelor of Communication,BCOMN
+87,Bachelor of Computing,BCOMP
+88,Bachelor of Computer Operations Technology,BCOT
+89,Bachelor of Communications Studies,BCS
+90,Bachelor of Design,BDES
+91,Bachelor of Engineering,BE
+92,Bachelor of Electrical Engineering,BEE
+93,Bachelor of Electronics Engineering Technology,BEET
+94,Bachelor of Environmental Studies,BES
+95,Bachelor of Economics,BEC
+96,Bachelor of Finance & Economics,BECONFIN
+97,Bachelor of Economic Science,BECONSC
+98,Bachelor of Education,BED
+99,Bachelor of Environmental Design,BEND
+100,Bachelor of Engineering,BENG
+101,Bachelor of Fine Arts,BFA
+102,Bachelor of Finance,BFIN
+103,Bachelor of General Studies,BGS
+104,Bachelor of Game & Simulation Programming,BGSP
+105,Bachelor of Humanities and Arts,BHA
+106,Bachelor of Hotel Management,BHM
+107,Bachelor of Health Science,BHS
+108,Bachelor of Health Sciences,BHSC
+109,Bachelor of Interior Architecture,BIARCH
+110,Bachelor of Integrated Studies,BIS
+111,Bachelor of Interdisciplinary Studies,BIS
+112,Bachelor of Industrial and Science Engineering,BISE
+113,Bachelor of Information Technology,BIT
+114,Bachelor of Industrial Design,BINDSN
+115,Bachelor of Information Science,BINFSCI
+116,Bachelor of Information Technology,BINFTECH
+117,Bachelor of International Studies,BINTST
+118,Bachelor of Journalism,BJ
+119,Bachelor of Liberal Arts,BLA
+120,Bachelor of Landscape Architecture,BLARCH
+121,Bachelor of Liberal Studies,BLS
+122,Bachelor of Languages,BLANG
+123,Bachelor of Music,BM
+124,Bachelor of Mechanical Engineering,BME
+125,Bachelor of Music Education,BMED
+126,Bachelor of Materials Engineering,BMTLE
+127,Bachelor of Music,BMUS
+128,Bachelor of Public Affairs,BPA
+129,Bachelor of Polymer and Fiber Engineering,BPFE
+130,Bachelor of Professional Health Science,BPHS
+131,Bachelor of Science,BS
+132,Bachelor of Science in Aerospace Engineering,BSAE
+133,Bachelor of Science in Business Administration,BSBA
+134,Bachelor of Science in Biomedical Engineering,BSBME
+135,Bachelor of Science in Commerce Business Administration,BSCBA
+136,Bachelor of Science in Civil Engineering,BSCE
+137,Bachelor of Science in Computer & Information Sciences,BSCIS
+138,Bachelor of Science in Computer Science,BSCS
+139,Bachelor of Science in Computer Technology,BSCT
+140,Bachelor of Science in Chemical Engineering,BSCHEE
+141,Bachelor of Science in Chemistry,BSCHEM
+142,Bachelor of Science in Engineering,BSE
+143,Bachelor of Science in Electrical Engineering,BSEE
+144,Bachelor of Science in Engineering Technology,BSET
+145,Bachelor of Science in Education,BSED
+146,Bachelor of Science in Geology,BSGEO
+147,Bachelor of Science in Human Environmental Sciences,BSHES
+148,Bachelor of Science in Mechanical Engineering,BSME
+149,Bachelor of Science in Manufacturing Engineering Technology,BSMFT
+150,Bachelor of Science in Metallurgical Engineering,BSMET
+151,Bachelor of Science in Microbiology,BSMICR
+152,Bachelor of Science in Materials Engineering,BSMTE
+153,Bachelor of Science in Nursing,BSN
+154,Bachelor of Science in Social Work,BSSW
+155,Bachelor of Social Work,BSW
+156,Bachelor of Software Engineering,BSWE
+157,Bachelor of Textile Engineering,BTE
+158,Bachelor of Technical & Interdisciplinary Studies,BTIS
+159,Bachelor of Textile Management and Technology,BTMT
+160,Bachelor of Wireless Engineering,BWE
+161,Bachelor of Arts,BA
+162,Bachelor of Economics,BAECON
+163,Bachelor of Education,BAED
+164,Bachelor of Arts and Economics,BAE
+165,Bachelor of Journalism,BAJ
+166,Bachelor of Architecture,BARCH
+167,Bachelor of Applied Science,BAS
+168,Bachelor of Applied Studies,BAS
+169,Bachelor of Applied Science,BASC
+170,Bachelor of Arts for Teaching,BAT
+171,Bachelor of Aviation,BAVN
+172,Bachelor of Biomedical Science,BBIOMEDSC
+173,Bachelor of Business Information Systems,BBIS
+174,Bachelor of Surgery,BC
+175,Bachelor of Surgery,BCH
+176,Bachelor of Dental Surgery,BCHD
+177,Bachelor of Surgery Degree,BCHIR
+178,Bachelor of Civil Law,BCL
+179,Bachelor of Counseling,BCOUN
+180,Bachelor of Divinity,BD
+181,Bachelor of Divisionnity,BD
+182,Bachelor of Design,BDES
+183,Bachelor of Dental Surgery,BDS
+184,Bachelor of Dental Science,BDSC
+185,Bachelor of Engineering,BE
+186,Bachelor of Economics,BECON
+187,Bachelor of Economics and Finance,BECONFIN
+188,Bachelor of Science in Education,BED
+189,Bachelor of Engineering,BENG
+190,Bachelor of Fine Arts,BFA
+191,Bachelor of Finance,BFIN
+192,Bachelor of General Studies,BGS
+193,Bachelor of Health & Physical Education,BHPE
+194,Bachelor of Health Science,BHS
+195,Bachelor of Health Science,BHSC
+196,bachelor of hygiene,BHYG
+197,Bachelor of Information and Communications Technology,BICT
+198,Bachelor of Integrated Studies,BIS
+199,Bachelor of Journalism,BJ
+200,Bachelor of Kinesiology,BKIN
+201,Bachelor of Liberal Arts,BLA
+202,Bachelor of Landscape Architecture,BLARCH
+203,Bachelor of Music (degree),BM
+204,Bachelor of Medicine,BM
+205,Bachelor of Biomedical science,BMEDSC
+206,Bachelor of Medical Science,BMEDSC
+207,Bachelor of Medical Science,BMEDSCI
+208,Bachelor of Midwifery,BMID
+209,Bachelor of Ministry,BMIN
+210,Bachelor of Medical Science,BMS
+211,Bachelor of Biomedical science,BMSC
+212,Bachelor of Medical Science,BMSC
+213,Bachelor of Music,BMUS
+214,Bachelor of Nursing,BN
+215,Bachelor of Nursing Science,BNSC
+216,Bachelor of Nursing,BNURS
+217,Bachelor of Physical Education,BPE
+218,Bachelor of Pharmacy,BPHARM
+219,Bachelor of Philosophy,BPHIL
+220,bachelor of public health nursing,BPHN
+221,Bachelor of Professional Studies,BPS
+222,Bachelor of Religious Education,BRE
+223,Bachelor of Religious Studies,BRS
+224,Bachelor of Science (clear in education line),BS
+225,Bachelor of Science in Education,BSINED
+226,Bachelor of Science in Business Administration,BSBA
+227,Bachelor of Science (university degree),BSC
+228,Bachelor of Science and/with Education,BSCED
+229,Bachelor of Science in Economics,BSCECON
+230,Bachelor of Science in Engineering,BSCENG
+231,Bachelor of Science in Psychology,BSCPSYCH
+232,Bachelor of Nursing Science,BSCN
+233,Bachelor of Science in Education,BSE
+234,Bachelor of Science in Engineering,BSE
+235,Bachelor of Science in Education,BSED
+236,Bachelor of Science in Environmental Health,BSEH
+237,Bachelor of Science in Engineering Technology,BSET
+238,Bachelor of Science in Family and Consumer Sciences,BSFC
+239,Bachelor of Science in General Studies,BSGS
+240,Bachelor of Journalism,BSJ
+241,Bachelor of Science in Law,BSL
+242,Bachelor of Science in Medicine,BSM
+243,Bachelor of Science in Nursing,BSN
+244,Bachelor of Science in Nuclear Engineering,BSNE
+245,Bachelor of Social Science,BSOCSC
+246,Bachelor of Science in Public Health,BSPH
+247,Bachelor of Social Work,BSW
+248,Bachelor of Teaching,BTCHG
+249,Bachelor of Technology,BTECH
+250,Bachelor of Theology,BTH
+251,Bachelor of Theology,BTHEOL
+252,Bachelor of Veterinary Medicine,BVETMED
+253,Bachelor of Veterinary Medicine and Science,BVMS
+254,Bachelor of Surgery,CB
+255,Bachelor of Surgery,CHB
+256,Doctor of Surgery,CHD
+257,Master in Surgery,CM
+258,Doctor of Arts,DA
+259,Doctor of Applied Science,DAS
+260,Doctor of Architecture,DARCH
+261,Doctor of Business Administration,DBA
+262,Doctor of Criminal Justice,DCJ
+263,Doctor of Comparative Law,DCL
+264,Doctor of Civil Law,DCL
+265,Doctor of Computer Science,DCS
+266,Doctor of Chemistry,DCHEM
+267,Doctor of Criminology,DCRIM
+268,Doctor of Engineering Science,DESC
+269,Doctor of Engineering,DENG
+270,Doctor of Environmental Science and Engineering,DENV
+271,Doctor of Forestry,DF
+272,Doctor of Fine Arts,DFA
+273,Doctor of Geological Science,DGS
+274,Doctor of Health Education,DHED
+275,Doctor of Hebrew Literature/Letters,DHL
+276,Doctor of Health and Safety,DHS
+277,Doctor of Hebrew Studies,DHS
+278,Doctor of Humane Letters,DHUMLITT
+279,Doctor of Information Technology,DIT
+280,Doctor of Industrial Technology,DIT
+281,Doctor of Law and Policy,DLP
+282,Doctor of Library Science,DLS
+283,Doctor of Literature and Philosophy,DLITTETPHIL
+284,Doctor of Ministry,DM
+285,Doctor of Musical Arts,DMA
+286,Doctor of Musical Education,DME
+287,Doctor of Modern Languages,DML
+288,Doctor of Medical Science,DMSC
+289,Doctor of Music Therapy,DMT
+290,Doctor of Ministry,DMIN
+291,Doctor of Music,DMUS
+292,Doctor of Naprapathic Medicine,DN
+293,Doctor of Nursing Science,DNS
+294,Doctor of Nursing Science,DNSC
+295,Doctor of Public Administration,DPA
+296,Doctor of Physical Education,DPE
+297,Doctor of Public Health,DPH
+298,Doctor of Professional Studies,DPS
+299,Doctor of Physical Therapy,DPT
+300,Doctor of Recreation,DR
+301,Doctor of Recreation,DREC
+302,Doctor of Sacred Music,DSM
+303,Doctor of Social Science,DSSC
+304,Doctor of Social Work,DSW
+305,Doctor of Science,DSC
+306,Doctor of Science in Dentistry,DSCD
+307,Doctor of Science and Hygiene,DSCH
+308,Doctor of Science in Veterinary Medicine,DSCVM
+309,Doctor of Business Administration,DBA
+310,Doctor of Chiropractic,DC
+311,Doctor of Surgery,DCH
+312,Doctor of Civil Law,DCL
+313,Doctor of Clinical Psychology,DCLINPSYCH
+314,Divinitatis Doctor,DD
+315,Doctor of Divisionnity,DD
+316,Divisionnitatis Doctor,DD
+317,Doctor of Divinity,DD
+318,Doctor of Dental Surgery,DDS
+319,Doctor of Dental Science,DDSC
+320,Doctor of Literature,DLIT
+321,Doctor of Letters,DLITT
+322,Doctor of Medicine,DM
+323,Doctor of Dental Medicine,DMD
+324,Doctor of Medical Education,DME
+325,Doctor of Ministry,DMIN
+326,Doctor of Medical Science,DMSC
+327,Doctor of Medical Technology,DMT
+328,Doctor of Music,DMUS
+329,Doctor of Veterinary Medicine,DMV
+330,Doctor of Nursing,DN
+331,Doctor of Nursing Education,DNE
+332,Doctor of Nursing Science,DNS
+333,Doctor of Nursing Science,DNSC
+334,Doctor of Nursing Science,DNURSSCI
+335,Doctor of Osteopathy,DO
+336,Doctor of Ocular Science,DOS
+337,Doctor of Pharmacy,DP
+338,Doctor of Public Health,DPH
+339,Doctor of Philosophy,DPHIL
+340,Doctor of Public Health Nursing,DPHN
+341,Doctor of Pediatric Medicine,DPM
+342,Doctor of Professional Studies,DPROF
+343,Doctor of Practical Theology,DPT
+344,Doctor of Design,DRDES
+345,Doctor of Public Health,DRPH
+346,Doctor of Science,DS
+347,Doctor of Science,DSC
+348,Doctor of Social Work,DSW
+349,Doctor of the University,DUNIV
+350,Doctor of Veterinary Medicine,DVM
+351,Doctor of Veterinary Medicine & Surgery,DVMS
+352,Doctor of Veterinary Radiology,DVR
+353,Doctor of Veterinary Science,DVS
+354,Doctor of Education,EDD
+355,Bachelor of Education,EDB
+356,Doctor of Education,EDD
+357,Doctor of Engineering,ENGD
+358,Doctor of Canon Law,JCD
+359,Juris Doctor,JD
+360,Doctor of Juridical Science,JSD
+361,Doctor of Law and Policy,LPD
+362,Doctor of the Science of Law,LSCD
+363,doctor of letters,LITTD
+364,Master of Laws,LLM
+365,Legum Baccalaureus (Latin: Bachelor Of Laws),LLB
+366,doctor of laws,LLD
+367,Master of Laws,LLM
+368,Licensed Master of Social Work,LMSW
+369,Master of Arts in Education,MAED
+370,Doctor of Medicine,MD
+371,Master of Education,MED
+372,Master of Fine Arts,MFA
+373,Master of Interdisciplinary Studies,MIS
+374,Master of Library and Information Science,MLIS
+375,Master of Ministry,MMIN
+376,Master of Music,MMUS
+377,Master of Occupational Therapy,MOT
+378,Master of Science in Engineering Technology,MSET
+379,Master of Science in Education,MSED
+380,Master of Science in Nursing,MSN
+381,Master of Social Work,MSW
+382,Master of Urban Planning,MUP
+383,Master of Arts,MA
+384,Master of Arts in Education,MAED
+385,Master of Applied Anthropology,MAA
+386,Master of Accountancy,MACC
+387,Master of Arts in Christian Education,MACE
+388,Master of Accountancy,MACY
+389,Master of Arts in international economics and finance,MAIEF
+390,Master of Arts in International Hotel Management,MAIHM
+391,Master of Arts in Liberal Studies,MALS
+392,Master of Arts Management,MAM
+393,Master of Arts in Public Service,MAPS
+394,Master of Arts in Professional Writing,MAPW
+395,Master of Architecture,MARCH
+396,Master of Archival Studies,MAS
+397,Master of Engineering,MASC
+398,Master of Applied Sciences,MASC
+399,Master of Arts and Teaching,MAT
+400,Bachelor of Medicine,MB
+401,Master of Business Administration,MBA
+402,Medicinae Baccalaureus, Baccalaureus Chirurgiae (Latin: Bachelor of Medicine, Bachelor of Surgery),Medicinae Baccalaureus, Baccalaureus Chirurgiae (Latin: Bachelor of Medicine,MBBS
+403,Master of Biochemistry,MBIOCHEM
+404,Master of Biology,MBIOL
+405,Master of Biological Science,MBIOLSCI
+406,Master of Surgery,MC
+407,Master of Surgery,MCH
+408,Master of Chemistry,MCHEM
+409,Master of Criminal Justice,MCJ
+410,Master of Clinical Dentistry,MCLINDENT
+411,Master of Clinical Medical Science,MCMSC
+412,Doctor of Medicine,MD
+413,Master of Divisionnity,MDIV
+414,Master of Divinity,MDIV
+415,Master of Digital Media,MDM
+416,Master of Drama,MDRAMA
+417,Master of Dental Surgery,MDS
+418,Master of Engineering,ME
+419,Master of Electronic Business,MEB
+420,Master of Economics,MECON
+421,Master of Education,MED
+422,Master of Environmental Design,MEDES
+423,Master of Engineering,MENG
+424,Master of Environmental Science,MENVSCI
+425,Master of Environmental Studies,MES
+426,Master of Earth Science,MESCI
+427,Master of Educational Technology,MET
+428,Master of Fine Art,MFA
+429,Master of Forensic Sciences,MFS
+430,Master of Geography,MGEOG
+431,Master of Geology,MGEOL
+432,Master of Geophysics,MGEOPHYS
+433,Master of Health Administration,MHA
+434,Master of Health Education,MHE
+435,Master of Health Science,MHS
+436,Master of Industrial Design,MID
+437,Master of International Development,MID
+438,Master of Management in the Network Economy,MINE
+439,Master of Informatics,MINF
+440,Master of Engineering,MING
+441,Master of Information Systems Management,MISM
+442,Master of Jurisprudence,MJUR
+443,Master of Labor and Human Resources,MLHR
+444,Master of Librarianship,MLIB
+445,Master of Library and Information Science degree,MLIS
+446,Master of Letters,MLITT
+447,Master of Library Science,MLS
+448,Master of Liberal Studies,MLS
+449,Master of Music,MM
+450,Master of Mathematics,MMATH
+451,Master of Mathematics and Physics,MMATHPHYS
+452,Master of Mass Communications,MMC
+453,Master of Music Education,MME
+454,Master of Ministry,MMIN
+455,Master of Mathematics, Operational Research, Statistics and Economics,Master of Mathematics, Operational Research,MMORSE
+456,Master of Marketing Research,MMR
+457,Master of Medical Science,MMS
+458,Master of Medical Science,MMSC
+459,Master of Management Sciences,MMSC
+460,Master of Music,MMUS
+461,Master of Nursing,MN
+462,Master of Natural Science,MNATSC
+463,Master of Science in Nursing,MNUR
+464,Master of Nursing Science,MNURSSCI
+465,Master of Oceanography,MOCEAN
+466,Master of Occupational Therapy,MOT
+467,Master of Pharmacy Administration,MPA
+468,Master of Public Administration,MPA
+469,Master of Professional Accountancy,MPA
+470,Master of Physician Assistant Studies,MPAS
+471,Master of Pharmacy,MPH
+472,Master of Public Health,MPH
+473,master of pharmacy,MPHARM
+474,Master of Philosophy,MPHIL
+475,Master of Physics,MPHYS
+476,Master of Pacific International Affairs,MPIA
+477,Master of Planning,MPLAN
+478,Master of Project Management,MPM
+479,Master of Public Management,MPM
+480,Master of Public Policy,MPP
+481,Master of Professional Studies,MPROFSTUDS
+482,Master of Professional Studies,MPS
+483,Master of Physical Therapy,MPT
+484,Master of Radiology,MRAD
+485,Master of Research,MRES
+486,Master of Science,MS
+487,Master of Surgery,MS
+488,Master of Science in Education,MSED
+489,Master of Surgery,MSC
+490,Master of Science,MSC
+491,Master in Science,MSCI
+492,Master of Science in Dentistry,MSD
+493,Master of Science in Engineering,MSE
+494,Master of Science in Electrical Engineering,MSEE
+495,Master of Science in Environmental Health,MSEH
+496,Master of Science in Finance,MSF
+497,Master of Science in Information,MSI
+498,Master of Science in Information Systems,MSIS
+499,Master of Science in Information Studies,MSIS
+500,Master of Criminal Justice,MSJA
+501,Master of Science in Library Science,MSLS
+502,Master of Sacred Music,MSM
+503,Master Of Science In Nursing,MSN
+504,Master of Science in Natural Sciences,MSNS
+505,Master of Social Science,MSOCSC
+506,Master of Science In Organizational Leadership,MSOL
+507,Master of Science in Public Health,MSPH
+508,Master of Social Science,MSSC
+509,Master of Science in Strategic Leadership,MSSL
+510,Master of Science in Social Work,MSSW
+511,Master of Studies,MST
+512,Master of Science in Taxation,MST
+513,Master of Statistics,MSTAT
+514,Master of Surgery,MSURG
+515,Master of Social Work,MSW
+516,Master of Theology,MTH
+517,Master of Theology,MTHEOL
+518,Master of the University,MUNIV
+519,Master of Urban Studies,MURB
+520,Master of Urban and Regional Planning,MURP
+521,Doctor of Music,MUSDOC
+522,Bachelor of Music,MUSB
+523,Doctor of Music,MUSD
+524,Master of Music,MUSM
+525,Doctor of Naturopathy,ND
+526,Doctor of Optometry,OD
+527,Post Master's Graduate Certificate,PMGC
+528,Doctor of Pharmacy,PD
+529,Doctor of Philosophy,PHD
+530,Doctor of Philosophy,PHD
+531,Doctor of Pharmacy,PHARMD
+532,Doctor of Pharmacy,PHARMD
+533,Doctor of Philosophy,PHD
+534,Doctor of Psychology,PSYD
+535,Doctor of Rehabilitation,RHD
+536,Doctor of Juridical Science,SJD
+537,Doctor of Sacred Theology,STD
+538,Bachelor of Science,SB
+539,Doctor of Science,SCD
+540,Doctor of Engineering Science,SCDE
+541,Scientiar Baccalaureus, Bachelor of Science,Scientiar Baccalaureus,SCB
+542,Doctor of Science,SCD
+543,Master of Surgery,SM
+544,Doctor of Social Science,SOCSCID
+545,Master of Theology,STM
+546,Doctor of Theology,THD
+547,Doctor of Practical Theology,THPD
+548,Bachelor of Theology,THB
+549,Doctor of Theology,THD
+550,Master of Theology,THM
+551,Veterinary Medical Doctor,VMD

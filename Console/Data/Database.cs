@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Reveche.SimpleLearnerInfoSystem.Models;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public abstract class DatabaseContext : DbContext
 {
@@ -27,22 +28,22 @@ public class SqliteDbContext : DatabaseContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseSqlite("Data Source=SimpleLearnerInfoSystem.db");
+        optionsBuilder.UseSqlite("Data Source=LearnerInfoSystem.db");
     }
 }
 
 public class MySqlDbContext : DatabaseContext
 {
-    private static readonly string MySqlConnectionString = $"server={Application.SqlCredentials.Host},{Application.SqlCredentials.Port};" +
-                                                            $"database={Application.SqlCredentials.Database};" +
-                                                            $"user={Application.SqlCredentials.Username};" +
-                                                            $"password={Application.SqlCredentials.Password};";
+    private static readonly string MySqlConnectionString =
+        $"server={Application.SqlCredentials.Host}:{Application.SqlCredentials.Port};" +
+        $"database={Application.SqlCredentials.Database};" +
+        $"user={Application.SqlCredentials.Username};" +
+        $"password={Application.SqlCredentials.Password};";
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-// #if DEBUG
-//         _mySqlConnectionString = "Server=localhost;Database=SimpleSchoolInfoSystem;User ID=test;Password=password;";
-// #endif
+        //optionsBuilder.UseMySql("Server=localhost;Database=LearnerInfoSystem;user=test;Password=password;",
+            //ServerVersion.AutoDetect("Server=localhost;Database=LearnerInfoSystem;user=test;Password=password;"));
         optionsBuilder.UseMySql(MySqlConnectionString, ServerVersion.AutoDetect(MySqlConnectionString));
     }
 }

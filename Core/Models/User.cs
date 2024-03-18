@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Reveche.SimpleLearnerInfoSystem.Models;
+namespace Reveche.LearnerInfoSystem.Models;
 
 /// <summary>
 ///     Represents the role of a user in the learning system.
@@ -22,7 +22,7 @@ public enum LearnerYear
     FourthYear,
     FifthYear,
     SixthYear,
-    SeventhYear,
+    SeventhYear
 }
 
 /// <summary>
@@ -49,22 +49,26 @@ public class User
     ///     The unique identifier for the user.
     /// </summary>
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    [StringLength(255)] public required int Id { get; set; }
-   
+    [StringLength(255)]
+    public required int Id { get; init; }
+
     /// <summary>
     ///     The string identifier for the user.
     /// </summary>
-    [StringLength(255)] public required string UserIdStr { get; set; }
+    [StringLength(255)]
+    public required string UserIdStr { get; set; }
 
     /// <summary>
     ///     The username of the user.
     /// </summary>
-    [StringLength(255)] public required string Username { get; set; }
+    [StringLength(255)]
+    public required string Username { get; set; }
 
     /// <summary>
     ///     The hashed password of the user.
     /// </summary>
-    [StringLength(255)] public required string PasswordHash { get; set; }
+    [StringLength(255)]
+    public required string PasswordHash { get; set; }
 
     /// <summary>
     ///     The salt used for the user's password hash.
@@ -74,62 +78,74 @@ public class User
     /// <summary>
     ///     The email of the user.
     /// </summary>
-    [StringLength(255)] public required string Email { get; set; }
+    [StringLength(255)]
+    public required string Email { get; set; }
 
     /// <summary>
     ///     The first name of the user.
     /// </summary>
-    [StringLength(255)] public required string FirstName { get; set; }
+    [StringLength(255)]
+    public required string FirstName { get; set; }
 
     /// <summary>
     ///     The middle name of the user.
     /// </summary>
-    [StringLength(255)] public string? MiddleName { get; set; }
+    [StringLength(255)]
+    public string? MiddleName { get; set; }
 
     /// <summary>
     ///     The last name of the user.
     /// </summary>
-    [StringLength(255)] public required string LastName { get; set; }
+    [StringLength(255)]
+    public required string LastName { get; set; }
 
     /// <summary>
     ///     The full name of the user.
     /// </summary>
-    [StringLength(255)] public required string FullName { get; set; }
+    [StringLength(255)]
+    public required string FullName { get; set; }
 
     /// <summary>
     ///     The birthdate of the user.
     /// </summary>
-    [StringLength(10)] public required string BirthDate { get; set; }
+    [StringLength(10)]
+    public required string BirthDate { get; set; }
 
     /// <summary>
     ///     The street address of the user.
     /// </summary>
-    [StringLength(255)] public required string AddressStreet { get; set; }
-    
+    [StringLength(255)]
+    public required string AddressStreet { get; set; }
+
     /// <summary>
     ///     The barangay of the user's address.
     /// </summary>
-    [StringLength(255)] public string? AddressBarangay { get; set; }
+    [StringLength(255)]
+    public string? AddressBarangay { get; set; }
 
     /// <summary>
     ///     The city of the user's address.
     /// </summary>
-    [StringLength(255)] public required string AddressCity { get; set; }
+    [StringLength(255)]
+    public required string AddressCity { get; set; }
 
     /// <summary>
     ///     The state of the user's address.
     /// </summary>
-    [StringLength(255)] public required string AddressProvince { get; set; }
+    [StringLength(255)]
+    public required string AddressProvince { get; set; }
 
     /// <summary>
     ///     The country code of the user's address.
     /// </summary>
-    [StringLength(2)] public required string AddressCountryCode { get; set; }
+    [StringLength(2)]
+    public required string AddressCountryCode { get; set; }
 
     /// <summary>
     ///     The zip code of the user's address.
     /// </summary>
-    [StringLength(10)] public required string AddressZipCode { get; set; }
+    [StringLength(10)]
+    public required string AddressZipCode { get; set; }
 
     /// <summary>
     ///     The phone number of the user.
@@ -145,12 +161,12 @@ public class User
     ///     The date when the user registered in the learning system.
     /// </summary>
     public required DateTime RegistrationDate { get; set; }
-    
+
     /// <summary>
     ///     The status of the user in the learning system.
     /// </summary>
     public required UserStatus Status { get; set; }
-    
+
     /// <summary>
     ///     The year level of the user in the learning system.
     /// </summary>

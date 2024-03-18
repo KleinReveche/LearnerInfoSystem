@@ -1,23 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using Reveche.SimpleLearnerInfoSystem.Models;
+using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public class SqlRepo : IRepo
 {
     private readonly DatabaseContext _db;
+
     public SqlRepo(DatabaseContext db)
     {
         _db = db;
         if (!db.Database.GetService<IRelationalDatabaseCreator>().Exists()) InitializeRepo();
-    }
-
-    private void InitializeRepo()
-    {
-        _db.Database.EnsureCreated();
-        _db.Settings.AddRange(Default.DefaultSettings);
-        _db.SaveChanges();
+        if (db is not MySqlDbContext) return;
+        try
+        {
+            _ = _db.Settings.First();
+        }
+        catch
+        {
+            InitializeRepo();
+        }
     }
 
     public void AddUser(User user)
@@ -35,7 +39,29 @@ public class SqlRepo : IRepo
 
     public void UpdateUser(int id, User user)
     {
-        _db.Users.Update(user);
+        var userToUpdate = _db.Users.Find(id);
+        userToUpdate!.Username = user.Username;
+        userToUpdate.Role = user.Role;
+        userToUpdate.UserIdStr = user.UserIdStr;
+        userToUpdate.PasswordHash = user.PasswordHash;
+        userToUpdate.PasswordSalt = user.PasswordSalt;
+        userToUpdate.Email = user.Email;
+        userToUpdate.FirstName = user.FirstName;
+        userToUpdate.MiddleName = user.MiddleName;
+        userToUpdate.LastName = user.LastName;
+        userToUpdate.FullName = user.FullName;
+        userToUpdate.BirthDate = user.BirthDate;
+        userToUpdate.AddressStreet = user.AddressStreet;
+        userToUpdate.AddressBarangay = user.AddressBarangay;
+        userToUpdate.AddressCity = user.AddressCity;
+        userToUpdate.AddressProvince = user.AddressProvince;
+        userToUpdate.AddressCountryCode = user.AddressCountryCode;
+        userToUpdate.AddressZipCode = user.AddressZipCode;
+        userToUpdate.PhoneNumber = user.PhoneNumber;
+        userToUpdate.Status = user.Status;
+        userToUpdate.RegistrationDate = user.RegistrationDate;
+        userToUpdate.YearLevel = user.YearLevel;
+        _db.Users.Update(userToUpdate);
         _db.SaveChanges();
     }
 
@@ -58,7 +84,13 @@ public class SqlRepo : IRepo
 
     public void UpdateProgram(int id, Program program)
     {
-        _db.Programs.Update(program);
+        var programToUpdate = _db.Programs.Find(id);
+        programToUpdate!.Code = program.Code;
+        programToUpdate.Title = program.Title;
+        programToUpdate.Description = program.Description;
+        programToUpdate.Status = program.Status;
+        programToUpdate.Courses = program.Courses;
+        _db.Programs.Update(programToUpdate);
         _db.SaveChanges();
     }
 
@@ -81,7 +113,18 @@ public class SqlRepo : IRepo
 
     public void UpdateCourse(int id, Course course)
     {
-        _db.Courses.Update(course);
+        var courseToUpdate = _db.Courses.Find(id);
+        courseToUpdate!.Code = course.Code;
+        courseToUpdate.Title = course.Title;
+        courseToUpdate.Description = course.Description;
+        courseToUpdate.Type = course.Type;
+        courseToUpdate.DurationInHours = course.DurationInHours;
+        courseToUpdate.InstructorId = course.InstructorId;
+        courseToUpdate.Year = course.Year;
+        courseToUpdate.Term = course.Term;
+        courseToUpdate.Units = course.Units;
+        
+        _db.Courses.Update(courseToUpdate);
         _db.SaveChanges();
     }
 
@@ -104,7 +147,14 @@ public class SqlRepo : IRepo
 
     public void UpdateCourseCompletion(int id, CourseCompletion courseCompletion)
     {
-        _db.CourseCompletions.Update(courseCompletion);
+        var courseCompletionToUpdate = _db.CourseCompletions.Find(id);
+        courseCompletionToUpdate!.CourseId = courseCompletion.CourseId;
+        courseCompletionToUpdate.UserId = courseCompletion.UserId;
+        courseCompletionToUpdate.DateCompleted = courseCompletion.DateCompleted;
+        courseCompletionToUpdate.Status = courseCompletion.Status;
+        courseCompletionToUpdate.InstructorId = courseCompletion.InstructorId;
+        courseCompletionToUpdate.Grade = courseCompletion.Grade;
+        _db.CourseCompletions.Update(courseCompletionToUpdate);
         _db.SaveChanges();
     }
 
@@ -127,7 +177,11 @@ public class SqlRepo : IRepo
 
     public void UpdateProgramTracker(int id, ProgramTracker programTracker)
     {
-        _db.ProgramTrackers.Update(programTracker);
+        var programTrackerToUpdate = _db.ProgramTrackers.Find(id);
+        programTrackerToUpdate!.UserId = programTracker.UserId;
+        programTrackerToUpdate.Programs = programTracker.Programs;
+        programTrackerToUpdate.Courses = programTracker.Courses;
+        _db.ProgramTrackers.Update(programTrackerToUpdate);
         _db.SaveChanges();
     }
 
@@ -155,7 +209,6 @@ public class SqlRepo : IRepo
 
     public bool Login(string username, string email, string password, out User? loggedInUser)
     {
-        var users = GetUsers();
         var adminUsername = GetSetting(0)!.Value;
         var adminPassword = GetSetting(1)!.Value;
         var adminSalt = GetSetting(2)!.Value;
@@ -192,10 +245,13 @@ public class SqlRepo : IRepo
             return true;
         }
 
-        loggedInUser = users.Find(user =>
-            (user.Username == username || user.Email == email) &&
-            credentials.VerifyPassword(password, user.PasswordHash, user.PasswordSalt));
-        return loggedInUser != null;
+
+        loggedInUser = _db.Users.First(user => user.Username == username || user.Email == email);
+        if (credentials.VerifyPassword(password, loggedInUser.PasswordHash, loggedInUser.PasswordSalt))
+            return true;
+
+        loggedInUser = null;
+        return false;
     }
 
     public void AddCourses(IEnumerable<Course> courses)
@@ -227,4 +283,37 @@ public class SqlRepo : IRepo
         _db.ProgramTrackers.AddRange(programTrackers);
         _db.SaveChanges();
     }
+
+    public List<User> GetLearners() => _db.Users.Where(user => user.Role == UserRole.Learner).ToList();
+    public List<User> GetInstructors() => _db.Users.Where(user => user.Role == UserRole.Instructor).ToList();
+
+    public List<CourseCompletion> GetCourseCompletionsByUser(int userId) =>
+        _db.CourseCompletions.Where(x => x.UserId == userId).ToList();
+
+    public List<ProgramTracker> GetProgramTrackersByUser(int userId) =>
+        _db.ProgramTrackers.Where(x => x.UserId == userId).ToList();
+
+    public List<Course> GetCoursesByInstructor(int instructorId) =>
+        _db.Courses.Where(x => x.InstructorId == instructorId).ToList();
+
+    public List<User> GetStudentsByCourse(int courseId) =>
+        _db.Users.Where(x => GetCourseCompletionsByCourse(courseId).Any(y => y.UserId == x.Id)).ToList();
+
+    public User? GetUserByFullName(string fullName) => _db.Users.FirstOrDefault(x => x.FullName == fullName);
+
+    private void InitializeRepo()
+    {
+        _db.Database.Migrate();
+        _db.Settings.AddRange(Default.DefaultSettings);
+        _db.SaveChanges();
+    }
+
+    public List<CourseCompletion> GetCourseCompletionsByCourse(int courseId) =>
+        _db.CourseCompletions.Where(x => x.CourseId == courseId).ToList();
+
+    public List<ProgramTracker> GetProgramTrackersByProgram(int programId) =>
+        _db.ProgramTrackers.Where(x => x.Programs.Any(y => y.ProgramId == programId)).ToList();
+
+    public List<Course> GetCoursesByCourseCompletions(IEnumerable<CourseCompletion> courseCompletions) =>
+        _db.Courses.Where(x => courseCompletions.Any(y => y.CourseId == x.Id)).ToList();
 }

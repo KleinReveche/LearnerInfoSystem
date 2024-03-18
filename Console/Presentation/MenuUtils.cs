@@ -1,6 +1,6 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Console.Data;
+﻿using Reveche.LearnerInfoSystem.Console.Data;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
+namespace Reveche.LearnerInfoSystem.Console.Presentation;
 
 public static class MenuUtils
 {
@@ -10,7 +10,8 @@ public static class MenuUtils
         {
             System.Console.Clear();
             System.Console.ForegroundColor = ConsoleColor.Green;
-            var choices = actions.Select(x => Utils.NameRegex().Replace(x.Method.Name, " $1")).Append("Return").ToArray();
+            var choices = actions.Select(x => Utils.NameRegex().Replace(x.Method.Name, " $1")).Append("Return")
+                .ToArray();
             var actionDictionary = GetActions(actions);
             Boxes.DrawHeaderAndQuestionBox(title, "Choose your Action: ", choices, padding: 20, zeroIndexed: true);
             System.Console.ResetColor();
@@ -23,14 +24,14 @@ public static class MenuUtils
             action();
         }
     }
-    
+
     public static void NotFoundPrompt(string type, bool add)
     {
         var addMsg = add ? $" Please add a {type} first." : "";
         Boxes.DrawCenteredBox($"No {type} found.{addMsg}");
         System.Console.ReadKey();
     }
-    
+
     private static Dictionary<char, Action> GetActions(IEnumerable<Action> actions)
     {
         var actionList = actions.ToList();
@@ -46,6 +47,7 @@ public static class MenuUtils
 
             actionDict.Add(asciiCode, actionList[i]);
         }
+
         return actionDict;
     }
 }

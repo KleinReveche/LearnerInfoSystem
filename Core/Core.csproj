@@ -4,13 +4,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>Reveche.SimpleLearnerInfoSystem.Core</AssemblyName>
-        <RootNamespace>Reveche.SimpleLearnerInfoSystem</RootNamespace>
+        <AssemblyName>Reveche.LearnerInfoSystem.Core</AssemblyName>
+        <RootNamespace>Reveche.LearnerInfoSystem</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Countries.json" />
-      <EmbeddedResource Include="Resources\Countries.json" />
+        <None Remove="Resources\Countries.json"/>
+        <EmbeddedResource Include="Resources\Countries.json"/>
     </ItemGroup>
 
 </Project>

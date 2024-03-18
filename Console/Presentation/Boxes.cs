@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Presentation;
+namespace Reveche.LearnerInfoSystem.Console.Presentation;
 
 /// <summary>
 ///     Utility class that provides methods for drawing various types of boxes and tables in the console.
@@ -337,6 +337,8 @@ public static class Boxes
     /// </remarks>
     public static void CreateLazyTable(string[] headers, string[][] data, int maxRows = 20)
     {
+        if (maxRows == 20 && data.Length > 20) maxRows = System.Console.WindowHeight - 10;
+
         var columnWidths = new int[headers.Length];
         for (var i = 0; i < headers.Length; i++)
         {

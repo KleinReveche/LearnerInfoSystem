@@ -1,16 +1,16 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Reveche.SimpleLearnerInfoSystem.Console.Presentation;
-using Reveche.SimpleLearnerInfoSystem.Models;
+using Reveche.LearnerInfoSystem.Console.Presentation;
+using Reveche.LearnerInfoSystem.Models;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public static partial class Utils
 {
     /// <summary>
-    ///     Generates a unique ID for a student based on the academic year and a format string.
+    ///     Generates a unique ID for a learner based on the academic year and a format string.
     /// </summary>
     /// <param name="startYear">The start year of the academic year.</param>
     /// <param name="endYear">The end year of the academic year.</param>
@@ -23,9 +23,10 @@ public static partial class Utils
     ///     - EY: Last two digits of the end year.
     ///     - SYYY: Full start year.
     ///     - EYYY: Full end year.
-    ///     - ####: A unique number for each student, incremented for each new student.
+    ///     - ####: A unique number for each learner, incremented for each new learner.
     /// </remarks>
-    public static string GetLearnerId(int startYear, int endYear, IEnumerable<User> studentList, string format = "SY-EY-####")
+    public static string GetLearnerId(int startYear, int endYear, IEnumerable<User> studentList,
+        string format = "SY-EY-####")
     {
         var id = new StringBuilder(format);
 
@@ -33,16 +34,17 @@ public static partial class Utils
         id.Replace("EY", endYear.ToString()[2..]);
         id.Replace("SYYY", startYear.ToString());
         id.Replace("EYYY", endYear.ToString());
-        
+
         var count = format.Count(x => x == '#');
-        var lastStudent = studentList.LastOrDefault(x => x.UserIdStr.StartsWith(id.ToString().Replace(new string('#', count), "")));
+        var lastStudent =
+            studentList.LastOrDefault(x => x.UserIdStr.StartsWith(id.ToString().Replace(new string('#', count), "")));
         var lastStudentId = lastStudent?.UserIdStr.Split('-').Last() ?? "0";
         var idNumber = int.Parse(lastStudentId) + 1;
         id.Replace(new string('#', count), idNumber.ToString().PadLeft(count, '0'));
 
         return id.ToString();
     }
-    
+
     /// <summary>
     ///     Generates a unique ID for an instructor based on a format string.
     /// </summary>
@@ -62,7 +64,8 @@ public static partial class Utils
     ///     - LN: Full last name of the instructor.
     ///     - ####: A unique number for each instructor, incremented for each new instructor.
     /// </remarks>
-    public static string GetInstructorId(string firstname, string middlename, string lastname, List<User> users, string format = "FILNfaculty")
+    public static string GetInstructorId(string firstname, string middlename, string lastname, List<User> users,
+        string format = "FILNfaculty")
     {
         var id = new StringBuilder(format);
         id.Replace("FI", firstname[0].ToString());
@@ -71,38 +74,39 @@ public static partial class Utils
         id.Replace("FN", firstname);
         id.Replace("MN", middlename);
         id.Replace("LN", lastname);
-        
+
         var count = format.Count(x => x == '#');
         var idNumber = users.Count(i => i.Role == UserRole.Instructor) + 1;
         if (count > 0) id.Replace(new string('#', count), idNumber.ToString().PadLeft(count, '0'));
-        
+
         var duplicateCount = 0;
         var formattedId = id + (duplicateCount > 0 ? duplicateCount.ToString("D2") : "");
         while (users.Any(x => x.Username == formattedId)) duplicateCount++;
         return formattedId.ToLower();
     }
-    
+
     /// <summary>
-    ///     Generates an email for a student based on their first name, last name, and a format string.
+    ///     Generates an email for a learner based on their first name, last name, and a format string.
     /// </summary>
-    /// <param name="firstname">The first name of the student.</param>
-    /// <param name="middlename">The middle name of the student.</param>
-    /// <param name="lastname">The last name of the student.</param>
+    /// <param name="firstname">The first name of the learner.</param>
+    /// <param name="middlename">The middle name of the learner.</param>
+    /// <param name="lastname">The last name of the learner.</param>
     /// <param name="emailDomain">The domain for the email.</param>
     /// <param name="users">List of Users to check for duplicates.</param>
     /// <param name="format">A string representing the format of the email. Default is "FILN@ED".</param>
     /// <returns>A string representing the generated email.</returns>
     /// <remarks>
     ///     The format string can contain the following placeholders:
-    ///     - FI: First initial of the student's first name.
-    ///     - MI: First initial of the student's middle name.
-    ///     - LI: First initial of the student's last name.
-    ///     - FN: Full first name of the student.
-    ///     - MN: Full middle name of the student.
-    ///     - LN: Full last name of the student.
+    ///     - FI: First initial of the learner's first name.
+    ///     - MI: First initial of the learner's middle name.
+    ///     - LI: First initial of the learner's last name.
+    ///     - FN: Full first name of the learner.
+    ///     - MN: Full middle name of the learner.
+    ///     - LN: Full last name of the learner.
     ///     - ED: Email domain.
     /// </remarks>
-    public static string GetEmail(string firstname, string middlename, string lastname, string emailDomain, List<User> users, string format = "FILN@ED")
+    public static string GetEmail(string firstname, string middlename, string lastname, string emailDomain,
+        List<User> users, string format = "FILN@ED")
     {
         var email = new StringBuilder(format);
         email.Replace("FI", firstname[0].ToString());
@@ -112,14 +116,15 @@ public static partial class Utils
         email.Replace("MN", middlename);
         email.Replace("LN", lastname);
         email.Replace("ED", emailDomain);
-        
+
         var count = 0;
         var formattedEmail = email.ToString().ToLower().Replace("@", count > 0 ? count.ToString("D2") + "@" : "@");
         while (users.Any(x => x.Username == formattedEmail)) count++;
         return formattedEmail;
     }
 
-    public static string GetUserStringInput(string prompt, int padding = 0, int requiredLength = -1, params char[] required)
+    public static string GetUserStringInput(string prompt, int padding = 0, int requiredLength = -1,
+        params char[] required)
     {
         string input;
         do
@@ -128,12 +133,13 @@ public static partial class Utils
             else Boxes.DrawCenteredQuestionBox(prompt, padding: padding);
             input = System.Console.ReadLine() ?? "";
 
-            if (required.Length == 0 || required.All(input.Contains) || (requiredLength != -1 && requiredLength == input.Length)) break;
+            if (required.Length == 0 || required.All(input.Contains) ||
+                (requiredLength != -1 && requiredLength == input.Length)) break;
         } while (string.IsNullOrEmpty(input));
-        //TODO: FIX EMPTY STRING
+
         return input;
     }
-    
+
     public static string GetUserBirthDateInput(string prompt, int padding = 0)
     {
         while (true)
@@ -141,10 +147,11 @@ public static partial class Utils
             if (padding < 12) Boxes.DrawCenteredQuestionBox(prompt);
             else Boxes.DrawCenteredQuestionBox(prompt, padding: padding);
             var input = System.Console.ReadLine() ?? "";
-            if (DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)) return input;
+            if (DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                return input;
         }
     }
-    
+
     public static void GetUserBirthDateUpdate(string prompt, string old, out string updated)
     {
         while (true)
@@ -157,12 +164,13 @@ public static partial class Utils
                 break;
             }
 
-            if (!DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)) continue;
+            if (!DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                    out _)) continue;
             updated = input;
             break;
         }
     }
-    
+
     public static void GetStringUpdate(string type, string old, out string updated)
     {
         Boxes.DrawCenteredQuestionBox($"{type} [{old}]: ");
@@ -179,7 +187,18 @@ public static partial class Utils
         if (long.TryParse(input, out var n) && n > 0) updated = input;
         updated = old;
     }
-    
+
+
+    public static void GetDoubleUpdate(string prompt, string old, out string updated)
+    {
+        Boxes.DrawCenteredQuestionBox($"{prompt} [{old}]: ");
+        var input = System.Console.ReadLine();
+        if (string.IsNullOrEmpty(input)) updated = old;
+
+        if (double.TryParse(input, out var n) && n > 0) updated = input;
+        updated = old;
+    }
+
     public static void GetEnumUpdate<T>(string prompt, T old, out T updated) where T : struct, Enum
     {
         Boxes.DrawCenteredQuestionBox($"{prompt} [{old}]: ");
@@ -194,7 +213,7 @@ public static partial class Utils
     {
         var academicYearStr = $"{DateTime.Now.Year}-{DateTime.Now.Year + 1}";
         var inputParsed = Array.Empty<int>();
-        
+
         while (true)
         {
             Boxes.DrawHeaderAndQuestionBox(Application.AppName, $"Enter the Academic Year [{academicYearStr}]: ");
@@ -237,7 +256,8 @@ public static partial class Utils
         return string.IsNullOrEmpty(input) ? "" : input;
     }
 
-    public static string GetUserNumberInput(string prompt, long upperBound = long.MaxValue, bool hasIndicator = false, string indicator = ">")
+    public static string GetUserNumberInput(string prompt, long upperBound = long.MaxValue, bool hasIndicator = false,
+        string indicator = ">")
     {
         while (true)
         {
@@ -246,22 +266,25 @@ public static partial class Utils
             if (long.TryParse(input, out var number) && number > 0 && number < upperBound) return input;
         }
     }
+
     public static int GetUniqueId<T>(IEnumerable<T> items)
     {
         var id = 0;
         var propertyInfo = typeof(T).GetProperty("Id");
         if (propertyInfo == null) return id;
-        foreach (var itemId in items.Select(item => (int)propertyInfo.GetValue(item)!).Where(itemId => itemId == id)) id = itemId + 1;
+        foreach (var itemId in items.Select(item => (int)propertyInfo.GetValue(item)!).Where(itemId => itemId == id))
+            id = itemId + 1;
         return id;
     }
 
-    public static List<CourseCompletion> GetDefaultCourses(User student, Program program, IEnumerable<CourseCompletion> courseCompletions)
+    public static List<CourseCompletion> GetDefaultCourses(User learner, Program program,
+        IEnumerable<CourseCompletion> courseCompletions)
         => program.Courses.Select(course => new CourseCompletion
         {
             Id = GetUniqueId(courseCompletions),
             CourseId = course.Id,
             InstructorId = course.InstructorId,
-            UserId = student.Id,
+            UserId = learner.Id,
             Status = Status.NotStarted
         }).ToList();
 
@@ -275,19 +298,19 @@ public static partial class Utils
         while (users.Any(x => x.Username == username)) count++;
         return username.ToLower();
     }
-    
+
     public static string GetAge(string birthDateStr)
     {
         var birthDate = DateTime.ParseExact(birthDateStr, "yyyy-MM-dd", CultureInfo.InvariantCulture);
         var now = DateTime.Now;
-            
+
         var age = now.Year - birthDate.Year;
-        if (birthDate > now.AddYears(-age)) 
+        if (birthDate > now.AddYears(-age))
             age--;
 
         return age.ToString();
     }
-    
+
     /// <summary>
     ///     Retrieves a string input from the console without displaying the entered characters.
     /// </summary>

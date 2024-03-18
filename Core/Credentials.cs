@@ -1,8 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Reveche.SimpleLearnerInfoSystem;
-
+namespace Reveche.LearnerInfoSystem;
 
 public class Credentials
 {

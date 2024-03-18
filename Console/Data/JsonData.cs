@@ -1,6 +1,6 @@
-﻿using Reveche.SimpleLearnerInfoSystem.Models;
+﻿using Reveche.LearnerInfoSystem.Models;
 
-namespace Reveche.SimpleLearnerInfoSystem.Console.Data;
+namespace Reveche.LearnerInfoSystem.Console.Data;
 
 public class JsonData
 {
